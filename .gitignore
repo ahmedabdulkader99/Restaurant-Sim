@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs/Restaurant/v16/Browse.VC.opendb
+/.vs
+/Debug
+/Restaurant/Debug
