@@ -108,6 +108,9 @@
     <ClInclude Include="Events\ArrivalEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="Generic_DS\LinkedSortedList.h">
+      <Filter>Generic_DS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo_Main.cpp" />
