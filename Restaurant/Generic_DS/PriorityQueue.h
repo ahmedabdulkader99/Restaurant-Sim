@@ -30,7 +30,7 @@ PriorityQueue<T>::PriorityQueue()
 template <typename T>
 PriorityQueue<T>::PriorityQueue(const PriorityQueue& pq)
 {
-	sListPtr = new LinkedSortedList(*pq.sListPtr);
+	sListPtr = pq.sListPtr->copyChain(pq.sListPtr->headPtr);
 }
 
 template <typename T>
