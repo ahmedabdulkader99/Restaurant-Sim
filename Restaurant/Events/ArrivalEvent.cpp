@@ -2,10 +2,12 @@
 #include "..\Rest\Restaurant.h"
 
 
-ArrivalEvent::ArrivalEvent(int eTime, int oID, ORD_TYPE oType, REGION reg):Event(eTime, oID)
+ArrivalEvent::ArrivalEvent(int eTime, int oID, int oDis, ORD_TYPE oType, REGION reg, double oM):Event(eTime, oID)
 {
 	OrdType = oType;
 	OrdRegion = reg;
+	OrdDistance = oDis;
+	OrdMoney = oM;
 }
 
 void ArrivalEvent::Execute(Restaurant* pRest)
