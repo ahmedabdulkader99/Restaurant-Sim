@@ -1,15 +1,11 @@
 #include "Order.h"
 
-Order::Order(int id, ORD_TYPE r_Type, REGION r_region)
-{
-	ID = (id>0&&id<1000)?id:0;	//1<ID<999
-	type = r_Type;
-	Region = r_region;	
-}
+static int count = 0;
 
-Order::~Order()
-{
-}
+Order::Order(ORD_TYPE r_Type, REGION r_region, int d, double m, int at)
+	:ID(++count), type(r_Type), Region(r_region), Distance(d), totalMoney(m), ArrTime(at), ServTime(0), FinishTime(0)
+{}
+
 
 int Order::GetID()
 {

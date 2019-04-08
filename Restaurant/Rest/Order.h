@@ -7,6 +7,7 @@ class Order
 {
 
 protected:
+	static int count;
 	int ID;         //Each order has a unique ID (from 1 --> 999 )
 	ORD_TYPE type;		//order type: Normal, Frozen, VIP
 	REGION Region;  //Region of this order
@@ -22,8 +23,7 @@ protected:
 	//
 
 public:
-	Order(int ID, ORD_TYPE r_Type, REGION r_region);
-	virtual ~Order();
+	Order(ORD_TYPE r_Type, REGION r_region, int d, double m, int at);
 
 	int GetID();
 

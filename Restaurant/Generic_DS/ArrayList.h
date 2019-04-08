@@ -10,7 +10,7 @@ private:
 	int itemCount;
 	int maxItems;
 public:
-	ArrayList(int arraySize);
+	ArrayList(int arraySize = 100);
 
 	bool isEmpty() const;
 	int getLength() const;

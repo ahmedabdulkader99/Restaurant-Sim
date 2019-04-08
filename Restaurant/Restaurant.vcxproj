@@ -156,6 +156,7 @@
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="Rest\Motorcycle.cpp" />
     <ClCompile Include="Rest\Order.cpp" />
+    <ClCompile Include="Rest\Region.cpp" />
     <ClCompile Include="Rest\Restaurant.cpp" />
   </ItemGroup>
   <ItemGroup>
