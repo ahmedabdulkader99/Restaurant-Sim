@@ -23,7 +23,7 @@ public:
 template <typename T>
 PriorityQueue<T>::PriorityQueue()
 {
-	sListPtr = new LinkedSortedList();
+	sListPtr = new LinkedSortedList<T>();
 }
 
 

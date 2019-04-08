@@ -7,7 +7,7 @@
 #pragma once
 class Motorcycle	
 {
-	static int count;
+	static int Mcount;
 	int ID;
 	ORD_TYPE type;	//for each order type there is a corresponding motorcycle type 
 	int speed;		//meters it can move in one clock tick (in one timestep)
@@ -15,6 +15,7 @@ class Motorcycle
 	STATUS	status;	//idle or in-service
 
 public:
+	Motorcycle();
 	Motorcycle(ORD_TYPE motoType, int s, REGION R);
 };
 

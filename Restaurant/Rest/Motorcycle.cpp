@@ -1,7 +1,11 @@
 #include "Motorcycle.h"
 
-static int count = 0;
+int Motorcycle::Mcount = 0;
+
+Motorcycle::Motorcycle()
+{
+}
 
 Motorcycle::Motorcycle(ORD_TYPE motoType, int s, REGION R)
-	:ID(++count), type(motoType), speed(s), region(R), status(IDLE)
+	:ID(++Mcount), type(motoType), speed(s), region(R), status(IDLE)
 {}

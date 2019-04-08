@@ -5,12 +5,11 @@ template <typename T>
 class ArrayList
 {
 private:
-	const int DEFAULT_CAPACITY;
-	T items[DEFAULT_CAPACITY];
+	T items[100];
 	int itemCount;
 	int maxItems;
 public:
-	ArrayList(int arraySize = 100);
+	ArrayList();
 
 	bool isEmpty() const;
 	int getLength() const;
@@ -24,8 +23,8 @@ public:
 };
 
 template <typename T>
-ArrayList<T>::ArrayList(int arraySize)
-	:DEFAULT_CAPACITY(arraysize), itemCount(0), maxItems(DEFAULT_CAPACITY)
+ArrayList<T>::ArrayList()
+	: itemCount(0), maxItems(100)
 {}
 
 
@@ -46,8 +45,8 @@ int ArrayList<T>::getLength() const
 template <typename T>
 bool ArrayList<T>::insert(int newPosition, const T& newEntry)
 {
-	bool ableToInsert = (newPosition >= 1) && (newPosition <= itemCount + 1) && (itemCout < maxItems);
-	if (ableToinsert)
+	bool ableToInsert = (newPosition >= 1) && (newPosition <= itemCount + 1) && (itemCount < maxItems);
+	if (ableToInsert)
 	{
 		for (int i = itemCount; i >= newPosition; i--)
 			items[i] = items[i - 1];

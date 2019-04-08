@@ -7,7 +7,7 @@ class Order
 {
 
 protected:
-	static int count;
+	static int Ocount;
 	int ID;         //Each order has a unique ID (from 1 --> 999 )
 	ORD_TYPE type;		//order type: Normal, Frozen, VIP
 	REGION Region;  //Region of this order

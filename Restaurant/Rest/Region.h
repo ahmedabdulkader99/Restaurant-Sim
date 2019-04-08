@@ -28,8 +28,10 @@ private:
 	int fastSpeed;
 	int normalSpeed;
 	int frozenSpeed;
+	//auto promotion
+	int autoPromotion;
 public:
-	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R);
+	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
 };
 
 #endif 

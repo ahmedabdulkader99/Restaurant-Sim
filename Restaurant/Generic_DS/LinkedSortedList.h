@@ -7,8 +7,8 @@ template <typename T>
 class LinkedSortedList
 {
 private:
-	Node<T> headPtr;
-	T itemCount;
+	Node<T>* headPtr;
+	int itemCount;
 	Node<T>* getNodeBefore(const T& anEntry) const;
 	Node<T>* getNodeAt(int position) const;
 	Node<T>* copyChain(const Node<T>* originalChainPtr);
@@ -65,7 +65,7 @@ Node<T>* LinkedSortedList<T>::copyChain(const Node<T>* originalChainPtr)
 	else
 	{
 		Node<T>* copiedChainPtr = new Node<T>(originalChainPtr->getItem());
-		copiedChainPtr->setNext(copyChain(originalChainPtr->getNext());
+		copiedChainPtr->setNext(copyChain(originalChainPtr->getNext()));
 		itemCount++;
 	}
 	return copiedChainPtr;
@@ -141,7 +141,7 @@ int LinkedSortedList<T>::getPosition(const T& newEntry) const
 template <typename T>
 bool LinkedSortedList<T>::isEmpty() const
 {
-	return ((head == nullptr) && (itemCount == 0));
+	return ((headPtr == nullptr) && (itemCount == 0));
 }
 
 template <typename T>
@@ -164,7 +164,7 @@ bool LinkedSortedList<T>::remove(int position)
 		}
 		else
 		{
-			Node<T>* prevPtr = getNodeAt(posution - 1);
+			Node<T>* prevPtr = getNodeAt(position - 1);
 			curPtr = prevPtr->getNext();
 			prevPtr->setNext(curPtr->getNext());
 		}

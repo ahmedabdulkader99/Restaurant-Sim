@@ -1,15 +1,97 @@
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #include "Restaurant.h"
 #include "..\Events\ArrivalEvent.h"
+#include "..\Events\CancellationEvent.h"
+#include "..\Events\PromotionEvent.h"
 
 
 Restaurant::Restaurant() 
 {
 	pGUI = NULL;
+
+	ifstream inFile("inputfile.txt");
+
+	int son, sof, sov;
+	inFile >> son >> sof >> sov;
+	int nomnA, nomnB, nomnC, nomnD, nomfA, nomfB, nomfC, nomfD, nomvA, nomvB, nomvC, nomvD;
+	inFile >> nomnA >> nomfA >> nomvA >> nomnB >> nomfB >> nomvB >> nomnC >> nomfC >> nomvC >> nomnD >> nomfD >> nomvD;
+	int autopromotionlimit;
+	inFile >> autopromotionlimit;
+	int noofevents;
+	inFile >> noofevents;
+
+	region[0] = new Region(nomvA, nomnA, nomfA, son, sov, sof, A_REG, autopromotionlimit);
+	region[1] = new Region(nomvB, nomnB, nomfB, son, sov, sof, B_REG, autopromotionlimit);
+	region[2] = new Region(nomvC, nomnC, nomfC, son, sov, sof, C_REG, autopromotionlimit);
+	region[3] = new Region(nomvD, nomnD, nomfD, son, sov, sof, D_REG, autopromotionlimit);
+
+	//not noevents but nof arrival events
+	for (int i = 0; i < noofevents; i++)
+	{
+		char s;
+		inFile >> s;
+		if (s == 'R')
+		{
+			int id, arrivaltime, money, dist;
+			char reg, type;
+			REGION reg1;
+			ORD_TYPE type1;
+			inFile >> arrivaltime >> type >> id >> dist >> money >> reg;
+			if (reg == 'A')
+			{
+				reg1 = A_REG;
+			}
+			else if (reg == 'B')
+			{
+				reg1 = B_REG;
+			}
+			else if (reg == 'C')
+			{
+				reg1 = C_REG;
+			}
+			else if (reg == 'D')
+			{
+				reg1 = D_REG;
+			}
+			if (type == 'N')
+			{
+				type1 = TYPE_NRM;
+			}
+			else if (type == 'F')
+			{
+				type1 = TYPE_FROZ;
+			}
+			else if (type == 'V')
+			{
+				type1 = TYPE_VIP;
+			}
+
+			Event* E = new ArrivalEvent(arrivaltime, id, dist, type1, reg1, money);
+			EventsQueue.enqueue(E);
+
+		}
+		if (s == 'X')
+		{
+			int id, arrivaltime;
+			inFile >> arrivaltime >> id;
+			Event* E = new CancellationEvent(arrivaltime, id);
+			EventsQueue.enqueue(E);
+
+		}
+		if (s == 'P')
+		{
+			int id, arrivaltime, ExtraMoney;
+			inFile >> arrivaltime >> id >> ExtraMoney;
+			Event* E = new PromotionEvent(arrivaltime, id, ExtraMoney);
+			EventsQueue.enqueue(E);
+
+		}
+	}
 }
 
 void Restaurant::RunSimulation()
@@ -110,10 +192,12 @@ void Restaurant::Just_A_Demo()
 		
 		int reg = rand()% REG_CNT;	//randomize region
 
+		int dist = 0;
+		int money = 0;
 
 		//Randomize event time
 		EvTime += rand()%4;
-		pEv = new ArrivalEvent(EvTime,O_id,(ORD_TYPE)OType,(REGION)reg);
+		pEv = new ArrivalEvent(EvTime, O_id, dist, (ORD_TYPE)OType, (REGION)reg, money);
 		AddEvent(pEv);
 
 	}	

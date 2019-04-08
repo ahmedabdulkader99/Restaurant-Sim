@@ -1,9 +1,9 @@
 #include "Order.h"
 
-static int count = 0;
+int Order::Ocount = 0;
 
 Order::Order(ORD_TYPE r_Type, REGION r_region, int d, double m, int at)
-	:ID(++count), type(r_Type), Region(r_region), Distance(d), totalMoney(m), ArrTime(at), ServTime(0), FinishTime(0)
+	:ID(++Ocount), type(r_Type), Region(r_region), Distance(d), totalMoney(m), ArrTime(at), ServTime(0), FinishTime(0)
 {}
 
 
