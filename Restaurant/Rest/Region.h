@@ -32,6 +32,7 @@ private:
 	int autoPromotion;
 public:
 	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
+	void AddOrder(Order* pOrd);
 };
 
 #endif 

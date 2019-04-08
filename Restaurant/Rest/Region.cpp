@@ -23,3 +23,17 @@ Region::Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int 
 		fastMotos.insert(i, M);
 	}
 }
+
+void Region::AddOrder(Order * pOrd)
+{
+	switch (pOrd->GetType()) 
+	{
+	case (TYPE_NRM):
+		NormalOrders.enqueue(pOrd);
+	case(TYPE_FROZ):
+		FrozenOrders.enqueue(pOrd);
+	case(TYPE_VIP):
+		VIPOrders.enqueue(pOrd);
+	}
+	totalOrders++;
+}

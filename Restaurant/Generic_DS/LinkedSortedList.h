@@ -94,7 +94,7 @@ template <typename T>
 void LinkedSortedList<T>::insertSorted(const T& newEntry)
 {
 	Node<T>* newNodePtr = new Node<T>(newEntry);
-	Node<T>* prevPtr = getNodBefore(newEntry);
+	Node<T>* prevPtr = getNodeBefore(newEntry);
 
 	if (isEmpty() || (prevPtr == nullptr))
 	{

@@ -2,6 +2,7 @@
 #define __EVENT_H_
 
 #include "..\Defs.h"
+#include "../GUI/GUI.h"
 
 class Restaurant;	//Forward declation
 

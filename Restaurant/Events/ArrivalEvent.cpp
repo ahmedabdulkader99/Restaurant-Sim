@@ -1,5 +1,6 @@
 #include "ArrivalEvent.h"
 #include "..\Rest\Restaurant.h"
+#include "..\Rest\Region.h"
 
 
 ArrivalEvent::ArrivalEvent(int eTime, int oID, int oDis, ORD_TYPE oType, REGION reg, double oM):Event(eTime, oID)
@@ -14,11 +15,7 @@ void ArrivalEvent::Execute(Restaurant* pRest)
 {
 	//This function should create and order and and fills its data 
 	// Then adds it to normal, frozen, or VIP order lists that you will create in phase1
-
-	
-	
-	///For the sake of demo, this function will just create an order and add it to DemoQueue
-	///Remove the next code lines in phase 1&2
-	Order* pOrd = new Order(OrdType, OrdRegion, OrdDistance, OrdMoney, 12);
-	pRest->AddtoDemoQueue(pOrd);
+	Order* pOrd = new Order(OrderID, OrdType, OrdRegion, OrdDistance, OrdMoney, EventTime);
+	pRest->AddOrder(pOrd);
+	pRest->PrintOrder(pOrd);
 }

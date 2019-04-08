@@ -23,7 +23,7 @@ protected:
 	//
 
 public:
-	Order(ORD_TYPE r_Type, REGION r_region, int d, double m, int at);
+	Order(int id, ORD_TYPE r_Type, REGION r_region, int d, double m, int at);
 
 	int GetID();
 

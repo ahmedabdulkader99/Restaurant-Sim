@@ -18,15 +18,13 @@ private:
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
 	Region* region[4];
 	int eventsCount;
-
-	/// ==> 
-	//	DEMO-related members. Should be removed in phases 1&2
-	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
-	/// ==>
+	int activeCount;
 	
 	//
 	// TODO: Add More Data Members As Needed
 	//
+
+	
 
 public:
 	
@@ -35,18 +33,11 @@ public:
 	void AddEvent(Event* pE);	//adds a new event to the queue of events
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
+	void Interactive();
 
-	/// ==> 
-	///  DEMO-related functions. Should be removed in phases 1&2
-	void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
-	void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
-	Order* getDemoOrder();			//return the front order from demo queue
-	/// ==> 
-
-
-	//
-	// TODO: Add More Member Functions As Needed
-	//
+	//Implementation funcs
+	void AddOrder(Order* pOrd);
+	void PrintOrder(Order* pOrd);
 
 };
 
