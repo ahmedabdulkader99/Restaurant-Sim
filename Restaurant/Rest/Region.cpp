@@ -30,10 +30,13 @@ void Region::AddOrder(Order * pOrd)
 	{
 	case (TYPE_NRM):
 		NormalOrders.enqueue(pOrd);
+		break;
 	case(TYPE_FROZ):
 		FrozenOrders.enqueue(pOrd);
+		break;
 	case(TYPE_VIP):
 		VIPOrders.enqueue(pOrd);
+		break;
 	}
 	totalOrders++;
 }

@@ -9,28 +9,6 @@ using namespace std;
 #include "..\Events\CancellationEvent.h"
 #include "..\Events\PromotionEvent.h"
 
-
-void Restaurant::AddOrder(Order* pOrd)
-{
-	switch (pOrd->GetRegion()) 
-	{
-	case(A_REG):
-		region[0]->AddOrder(pOrd);
-	case(B_REG):
-		region[1]->AddOrder(pOrd);
-	case(C_REG):
-		region[2]->AddOrder(pOrd);
-	case(D_REG):
-		region[3]->AddOrder(pOrd);
-	}
-	activeCount++;
-}
-
-void Restaurant::PrintOrder(Order * pOrd)
-{
-	pGUI->AddOrderForDrawing(pOrd);
-}
-
 Restaurant::Restaurant()
 	:activeCount(0)
 {
@@ -121,6 +99,32 @@ Restaurant::Restaurant()
 	}
 }
 
+
+void Restaurant::AddOrder(Order* pOrd)
+{
+	activeCount++;
+	switch (pOrd->GetRegion())
+	{
+	case(A_REG):
+		region[0]->AddOrder(pOrd);
+		break;
+	case(B_REG):
+		region[1]->AddOrder(pOrd);
+		break;
+	case(C_REG):
+		region[2]->AddOrder(pOrd);
+		break;
+	case(D_REG):
+		region[3]->AddOrder(pOrd);
+		break;
+	}
+}
+
+void Restaurant::PrintOrder(Order* pOrd)
+{
+	pGUI->AddOrderForDrawing(pOrd);
+}
+
 void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
@@ -144,6 +148,9 @@ void Restaurant::Interactive()
 	int CurrentTimeStep = 0;
 	while (!EventsQueue.isEmpty())
 	{
+
+		ExecuteEvents(CurrentTimeStep);
+
 		//print current timestep
 		char msg[100] = { 0 };
 		char timestep[5];
@@ -169,14 +176,8 @@ void Restaurant::Interactive()
 
 		pGUI->PrintMessage(msg);
 
-
-		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
-		//The above line may add new orders to the DEMO_Queue
-		//Let's draw all arrived orders by passing them to the GUI to draw
-		
-	
-		pGUI->waitForClick();
 		pGUI->UpdateInterface();
+		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
 	}
 	pGUI->waitForClick();
