@@ -12,7 +12,6 @@ using namespace std;
 
 void Restaurant::AddOrder(Order* pOrd)
 {
-	activeCount++;
 	switch (pOrd->GetRegion()) 
 	{
 	case(A_REG):
@@ -24,6 +23,7 @@ void Restaurant::AddOrder(Order* pOrd)
 	case(D_REG):
 		region[3]->AddOrder(pOrd);
 	}
+	activeCount++;
 }
 
 void Restaurant::PrintOrder(Order * pOrd)
@@ -45,6 +45,12 @@ Restaurant::Restaurant()
 	int autopromotionlimit;
 	inFile >> autopromotionlimit;
 	inFile >> eventsCount;
+
+	normalMotoCount = nomnA + nomnB + nomnC + nomnD;
+	VIPMotoCount = nomvA + nomvB + nomvC + nomvD;
+	frozenMotoCount = nomfA + nomfB + nomfC + nomfD;
+	
+	totalMotoCount = normalMotoCount + frozenMotoCount + VIPMotoCount;
 
 	region[0] = new Region(nomvA, nomnA, nomfA, son, sov, sof, A_REG, autopromotionlimit);
 	region[1] = new Region(nomvB, nomnB, nomfB, son, sov, sof, B_REG, autopromotionlimit);
@@ -139,11 +145,29 @@ void Restaurant::Interactive()
 	while (!EventsQueue.isEmpty())
 	{
 		//print current timestep
-		char timestep[10];
-		char active[10];
+		char msg[100] = { 0 };
+		char timestep[5];
+		char active[5];
+		char fmoto[5];
+		char vmoto[5];
+		char nmoto[5];
 		itoa(CurrentTimeStep, timestep, 10);
 		itoa(activeCount, active, 10);
-		pGUI->PrintMessage(active);
+		itoa(frozenMotoCount, fmoto, 10);
+		itoa(VIPMotoCount, vmoto, 10);
+		itoa(normalMotoCount, nmoto, 10);
+		strcat(msg, "Time: ");
+		strcat(msg, timestep);
+		strcat(msg, " // Active Orders: ");
+		strcat(msg, active);
+		strcat(msg, " // Normal Motos: ");
+		strcat(msg, nmoto);
+		strcat(msg, " Frozen Motos: ");
+		strcat(msg, fmoto);
+		strcat(msg, " Fast Motos: ");
+		strcat(msg, vmoto);
+
+		pGUI->PrintMessage(msg);
 
 
 		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step

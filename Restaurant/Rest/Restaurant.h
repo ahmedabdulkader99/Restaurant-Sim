@@ -19,6 +19,10 @@ private:
 	Region* region[4];
 	int eventsCount;
 	int activeCount;
+	int totalMotoCount;
+	int VIPMotoCount;
+	int normalMotoCount;
+	int frozenMotoCount;
 	
 	//
 	// TODO: Add More Data Members As Needed
