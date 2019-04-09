@@ -97,6 +97,7 @@ public:
 
 	void UpdateInterface();
 	void AddOrderForDrawing(Order* pOrd);	//Adds a new order to the drawing list
+	void RemoveOrderFromDrawing(int id); //Removes Order from drawing list
 	void ResetDrawingList();		//resets drawing list (should be called every timestep after drawing)
 
 	PROG_MODE getGUIMode() const;			//returns the mode of the program

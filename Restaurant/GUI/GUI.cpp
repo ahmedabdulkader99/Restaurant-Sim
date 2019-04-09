@@ -231,6 +231,21 @@ void GUI::AddOrderForDrawing(Order* ptr)
 	// points to the same Order pointed to by "ptr"
 }
 
+void GUI::RemoveOrderFromDrawing(int id)
+{
+	for (int i = 0; i < OrderCount; i++) {
+		if (OrdListForDrawing[i]->GetID() == id) {
+			OrderCount--;
+			for (int j = i; j < OrderCount; j++) {
+				OrdListForDrawing[i] = OrdListForDrawing[i + 1];
+			}
+			break;
+		}
+	}
+	return;
+}
+
+
 void GUI::ResetDrawingList()
 {
 	OrderCount = 0;		//resets the orders count to be ready for next timestep updates

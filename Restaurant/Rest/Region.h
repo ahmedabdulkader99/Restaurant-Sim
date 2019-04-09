@@ -17,6 +17,11 @@ private:
 	Queue<Order*> NormalOrders;
 	Queue<Order*> FrozenOrders;
 	int totalOrders;
+	struct activeOrders {
+		int ID;
+		char TYPE;
+	};
+	activeOrders orderInRegion[100];
 	//Motorcycles DS
 	ArrayList<Motorcycle> fastMotos;
 	ArrayList<Motorcycle> normalMotos;
@@ -32,7 +37,9 @@ private:
 	int autoPromotion;
 public:
 	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
+	bool HasOrder(int id);
 	void AddOrder(Order* pOrd);
+	bool RemoveOrder(int id);
 };
 
 #endif 

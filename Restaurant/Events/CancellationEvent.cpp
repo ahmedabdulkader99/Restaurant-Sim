@@ -7,5 +7,4 @@ CancellationEvent::CancellationEvent(int eTime, int oID)
 
 void CancellationEvent::Execute(Restaurant* pRest)
 {
-
 }
