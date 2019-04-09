@@ -10,7 +10,6 @@ private:
 	Node<T>* headPtr;
 	int itemCount;
 	Node<T>* getNodeBefore(const T& anEntry) const;
-	Node<T>* getNodeAt(int position) const;
 	Node<T>* copyChain(const Node<T>* originalChainPtr);
 public:
 	LinkedSortedList();
@@ -20,6 +19,7 @@ public:
 	void insertSorted(const T& newEntry);
 	bool removeSorted(const T& anEntry);
 	int getPosition(const T& newEntry) const;
+	Node<T>* getNodeAt(int position) const;
 
 	bool isEmpty() const;
 	int getLength() const;

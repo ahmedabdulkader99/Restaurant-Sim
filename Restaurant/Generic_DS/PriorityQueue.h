@@ -58,14 +58,14 @@ bool PriorityQueue<T>::enqueue(const T& newEntry)
 template <typename T>
 bool PriorityQueue<T>::dequeue()
 {
-	return sListPtr->removes(sListPtr->getLength());
+	return sListPtr->remove(sListPtr->getLength());
 }
 
 
 template <typename T>
 T PriorityQueue<T>::peek() const
 {
-	return sListPtr->getNodeAt(sListPtr->getLength());
+	return sListPtr->getNodeAt(sListPtr->getLength())->getItem();
 }
 
 #endif 

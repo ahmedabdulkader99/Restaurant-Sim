@@ -236,8 +236,8 @@ void GUI::RemoveOrderFromDrawing(int id)
 	for (int i = 0; i < OrderCount; i++) {
 		if (OrdListForDrawing[i]->GetID() == id) {
 			OrderCount--;
-			for (int j = i; j < OrderCount; j++) {
-				OrdListForDrawing[i] = OrdListForDrawing[i + 1];
+			for (int j = i; j < OrderCount+1; j++) {
+				OrdListForDrawing[j] = OrdListForDrawing[j + 1];
 			}
 			break;
 		}

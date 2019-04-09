@@ -23,11 +23,6 @@ private:
 	int VIPMotoCount;
 	int normalMotoCount;
 	int frozenMotoCount;
-	struct ActiveOrder {
-		int id;
-		REGION reg;
-		ORD_TYPE type;
-	};
 	
 	//
 	// TODO: Add More Data Members As Needed

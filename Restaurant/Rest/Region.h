@@ -21,6 +21,10 @@ private:
 		int ID;
 		char TYPE;
 	};
+	//Order counts
+	int nOrderCount;
+	int fOrderCount;
+	int vOrderCount;
 	activeOrders orderInRegion[100];
 	//Motorcycles DS
 	ArrayList<Motorcycle> fastMotos;

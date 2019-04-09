@@ -122,6 +122,8 @@ void Restaurant::AddOrder(Order* pOrd)
 
 void Restaurant::Remove(int id)
 {
+	activeCount--;
+	pGUI->RemoveOrderFromDrawing(id);
 	for (int i = 0; i < 4; i++) {
 		if (region[i]->HasOrder(id)) {
 			region[i]->RemoveOrder(id);
