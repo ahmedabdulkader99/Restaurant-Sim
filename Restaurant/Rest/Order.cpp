@@ -3,7 +3,12 @@
 
 Order::Order(int id,ORD_TYPE r_Type, REGION r_region, int d, double m, int at)
 	:ID(id), type(r_Type), Region(r_region), Distance(d), totalMoney(m), ArrTime(at), ServTime(0), FinishTime(0)
-{}
+{
+	if (type == TYPE_VIP)
+		priority = totalMoney;
+	else
+		priority = -1;
+}
 
 
 int Order::GetID()
@@ -30,4 +35,12 @@ void Order::SetDistance(int d)
 int Order::GetDistance() const
 {
 	return Distance;
+}
+
+bool Order::operator>(const Order& Ord) const
+{
+	if (priority > Ord.priority)
+		return true;
+	else
+		return false;
 }

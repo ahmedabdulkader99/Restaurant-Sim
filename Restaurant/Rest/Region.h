@@ -1,5 +1,6 @@
-#ifndef Region_h
-#define Region_h
+#pragma once
+#ifndef __Region_h
+#define __Region_h
 
 #include "../Generic_DS/PriorityQueue.h"
 #include "../Generic_DS/ArrayList.h"
@@ -7,6 +8,7 @@
 #include "Motorcycle.h"
 #include "Order.h"
 #include "../Defs.h"
+#include "Restaurant.h"
 
 class Region
 {
@@ -16,6 +18,7 @@ private:
 	PriorityQueue<Order*> VIPOrders;
 	Queue<Order*> NormalOrders;
 	Queue<Order*> FrozenOrders;
+	Queue<Order*> inService;
 	int totalOrders;
 	struct activeOrders {
 		int ID;
@@ -44,6 +47,7 @@ public:
 	bool HasOrder(int id);
 	void AddOrder(Order* pOrd);
 	bool RemoveOrder(int id);
+	void assign(Restaurant* pRest);
 };
 
 #endif 

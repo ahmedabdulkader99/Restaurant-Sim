@@ -8,6 +8,7 @@ using namespace std;
 #include "..\Events\ArrivalEvent.h"
 #include "..\Events\CancellationEvent.h"
 #include "..\Events\PromotionEvent.h"
+#include "Region.h"
 
 Restaurant::Restaurant()
 	:activeCount(0)
@@ -123,7 +124,6 @@ void Restaurant::AddOrder(Order* pOrd)
 void Restaurant::Remove(int id)
 {
 	activeCount--;
-	pGUI->RemoveOrderFromDrawing(id);
 	for (int i = 0; i < 4; i++) {
 		if (region[i]->HasOrder(id)) {
 			region[i]->RemoveOrder(id);
@@ -132,9 +132,15 @@ void Restaurant::Remove(int id)
 	}
 }
 
+
 void Restaurant::PrintOrder(Order* pOrd)
 {
 	pGUI->AddOrderForDrawing(pOrd);
+}
+
+void Restaurant::unPrintOrder(int id)
+{
+	pGUI->RemoveOrderFromDrawing(id);
 }
 
 void Restaurant::RunSimulation()
@@ -162,6 +168,10 @@ void Restaurant::Interactive()
 	{
 
 		ExecuteEvents(CurrentTimeStep);
+
+		for (int i = 0; i < 4; i++) {
+			region[i]->assign(this);
+		}
 
 		//print current timestep
 		char msg[100] = { 0 };
@@ -280,4 +290,4 @@ Restaurant::~Restaurant()
 
 
 
-	
+	 

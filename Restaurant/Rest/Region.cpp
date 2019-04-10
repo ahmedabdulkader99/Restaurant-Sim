@@ -2,11 +2,12 @@
 #include "../Defs.h"
 
 Region::Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP)
-	:totalOrders(0), fstCount(fc), norCount(nc), frzCount(fzc), 
-	 fastSpeed(fss), normalSpeed(ns), frozenSpeed(fzs),
-	 VIPOrders(), NormalOrders(), FrozenOrders(),
-	 region(R), autoPromotion(autoP),
-	 nOrderCount(0), fOrderCount(0), vOrderCount(0)
+	:totalOrders(0), fstCount(fc), norCount(nc), frzCount(fzc),
+	fastSpeed(fss), normalSpeed(ns), frozenSpeed(fzs),
+	VIPOrders(), NormalOrders(), FrozenOrders(),
+	region(R), autoPromotion(autoP),
+	nOrderCount(0), fOrderCount(0), vOrderCount(0),
+	inService()
 {
 	for (int i(1); i <= nc; i++)
 	{
@@ -86,4 +87,29 @@ bool Region::RemoveOrder(int id)
 		}
 	}
 	return false;
+}
+
+void Region::assign(Restaurant* pRest)
+{
+	Order* pOrd;
+	if (vOrderCount > 0) {
+		pOrd = VIPOrders.peek();
+		VIPOrders.dequeue();
+		inService.enqueue(pOrd);
+		pRest->unPrintOrder(pOrd->GetID());
+		vOrderCount--;
+	}
+
+	if (fOrderCount > 0) {
+		FrozenOrders.dequeue(pOrd);
+		inService.enqueue(pOrd);
+		pRest->unPrintOrder(pOrd->GetID());
+		fOrderCount--;
+	}
+	if (nOrderCount > 0) {
+		NormalOrders.dequeue(pOrd);
+		inService.enqueue(pOrd);
+		pRest->unPrintOrder(pOrd->GetID());
+		nOrderCount--;
+	}
 }

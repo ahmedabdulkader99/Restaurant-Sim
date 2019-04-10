@@ -33,7 +33,7 @@ Node<T>* LinkedSortedList<T>::getNodeBefore(const T& anEntry) const
 {
 	Node<T>* curPtr = headPtr;
 	Node<T>* prevPtr = nullptr;
-	while ((curPtr != nullptr) && (anEntry > curPtr->getItem()))
+	while ((curPtr != nullptr) && (*anEntry > *curPtr->getItem()))
 	{
 		prevPtr = curPtr;
 		curPtr = curPtr->getNext();
@@ -153,11 +153,11 @@ int LinkedSortedList<T>::getLength() const
 template <typename T>
 bool LinkedSortedList<T>::remove(int position)
 {
-	bool ableToRemove = (position >= 1) && (position <= itemCount);
+	bool ableToRemove = (position >= 0) && (position <= itemCount);
 	if (ableToRemove)
 	{
 		Node<T>* curPtr = nullptr;
-		if (position == 1)
+		if (position == 0)
 		{
 			curPtr = headPtr;
 			headPtr = headPtr->getNext();

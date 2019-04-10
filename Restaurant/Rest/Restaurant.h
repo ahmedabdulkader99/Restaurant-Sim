@@ -6,11 +6,13 @@
 #include "..\GUI\GUI.h"
 #include "..\Generic_DS\Queue.h"
 #include "..\Events\Event.h"
-#include "Region.h"
 
 #include "Order.h"
 
+class Region; //Foreward Declaration
+
 // it is the maestro of the project
+
 class Restaurant  
 {	
 private:
@@ -43,6 +45,7 @@ public:
 	void AddOrder(Order* pOrd);
 	void Remove(int id);
 	void PrintOrder(Order* pOrd);
+	void unPrintOrder(int id);
 
 };
 
