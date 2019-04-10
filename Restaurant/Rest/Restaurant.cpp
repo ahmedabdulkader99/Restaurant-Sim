@@ -187,8 +187,12 @@ void Restaurant::Interactive()
 		char vmoto[5];
 		char nmoto[5];
 		char counts[5];
+		int TotalCount = 0;
+		for (int i = 0; i < 4; i++) {
+			TotalCount += region[i]->GetWaitingOrders();
+		}
 		itoa(CurrentTimeStep, timestep, 10);
-		itoa(activeCount, active, 10);
+		itoa(TotalCount, active, 10);
 		itoa(frozenMotoCount, fmoto, 10);
 		itoa(VIPMotoCount, vmoto, 10);
 		itoa(normalMotoCount, nmoto, 10);
