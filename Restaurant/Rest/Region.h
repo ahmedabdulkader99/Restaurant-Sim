@@ -20,6 +20,7 @@ private:
 	Queue<Order*> FrozenOrders;
 	Queue<Order*> inService;
 	int totalOrders;
+	int waitingOrders;
 	struct activeOrders {
 		int ID;
 		char TYPE;
@@ -45,6 +46,10 @@ private:
 public:
 	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
 	bool HasOrder(int id);
+	int GetWaitingOrders();
+	int GetNMotoCount();
+	int GetFMotoCount();
+	int GetVMotoCount();
 	void AddOrder(Order* pOrd);
 	bool RemoveOrder(int id);
 	void assign(Restaurant* pRest);

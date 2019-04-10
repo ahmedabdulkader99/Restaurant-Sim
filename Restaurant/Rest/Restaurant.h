@@ -44,6 +44,7 @@ public:
 	//Implementation funcs
 	void AddOrder(Order* pOrd);
 	void Remove(int id);
+	void DecrementCount();
 	void PrintOrder(Order* pOrd);
 	void unPrintOrder(int id);
 

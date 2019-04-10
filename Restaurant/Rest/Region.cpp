@@ -7,7 +7,7 @@ Region::Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int 
 	VIPOrders(), NormalOrders(), FrozenOrders(),
 	region(R), autoPromotion(autoP),
 	nOrderCount(0), fOrderCount(0), vOrderCount(0),
-	inService()
+	inService(), waitingOrders(0)
 {
 	for (int i(1); i <= nc; i++)
 	{
@@ -35,6 +35,26 @@ bool Region::HasOrder(int id)
 	return false;
 }
 
+int Region::GetWaitingOrders()
+{
+	return waitingOrders;
+}
+
+int Region::GetNMotoCount()
+{
+	return norCount;
+}
+
+int Region::GetFMotoCount()
+{
+	return frzCount;
+}
+
+int Region::GetVMotoCount()
+{
+	return fstCount;
+}
+
 void Region::AddOrder(Order * pOrd)
 {
 	orderInRegion[totalOrders].ID = pOrd->GetID();
@@ -57,6 +77,7 @@ void Region::AddOrder(Order * pOrd)
 		break;
 	}
 	totalOrders++;
+	waitingOrders++;
 }
 
 bool Region::RemoveOrder(int id)
@@ -69,11 +90,14 @@ bool Region::RemoveOrder(int id)
 			if (orderInRegion[i].TYPE == 'N') {
 			
 				Order* npOrd;
-				for (int i(0); i < nOrderCount; i++) 
+				for (int i(0); i < nOrderCount; i++)
 				{
 					NormalOrders.dequeue(npOrd);
-					if (npOrd->GetID() == id)
+					if (npOrd->GetID() == id) {
 						delete npOrd;
+						waitingOrders--;
+						nOrderCount--;
+					}
 					else
 						temp.enqueue(npOrd);
 				}
@@ -89,6 +113,7 @@ bool Region::RemoveOrder(int id)
 	return false;
 }
 
+
 void Region::assign(Restaurant* pRest)
 {
 	Order* pOrd;
@@ -97,19 +122,25 @@ void Region::assign(Restaurant* pRest)
 		VIPOrders.dequeue();
 		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
+		pRest->DecrementCount();
 		vOrderCount--;
+		waitingOrders--;
 	}
 
 	if (fOrderCount > 0) {
 		FrozenOrders.dequeue(pOrd);
 		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
+		pRest->DecrementCount();
 		fOrderCount--;
+		waitingOrders--;
 	}
 	if (nOrderCount > 0) {
 		NormalOrders.dequeue(pOrd);
 		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
+		pRest->DecrementCount();
 		nOrderCount--;
+		waitingOrders--;
 	}
 }
