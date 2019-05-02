@@ -171,11 +171,13 @@ void Restaurant::Interactive()
 	int CurrentTimeStep = 0;
 	while (!EventsQueue.isEmpty() || activeCount>0)
 	{
+
 		for (int i = 0; i < 4; i++) {
 			region[i]->assign(this);
 		}
 
 		ExecuteEvents(CurrentTimeStep);
+
 
 
 

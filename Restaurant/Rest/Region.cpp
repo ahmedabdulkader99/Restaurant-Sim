@@ -61,7 +61,7 @@ void Region::AddOrder(Order * pOrd)
 	switch (pOrd->GetType()) 
 	{
 	case (TYPE_NRM):
-		NormalOrders.enqueue(pOrd);
+		NormalOrders.insert(1, pOrd);
 		orderInRegion[totalOrders].TYPE = 'N';
 		nOrderCount++;
 		break;
@@ -90,23 +90,17 @@ bool Region::RemoveOrder(int id)
 			if (orderInRegion[i].TYPE == 'N') {
 			
 				Order* npOrd;
-				for (int i(0); i < nOrderCount; i++)
+				for (int i(1); i <= nOrderCount; i++)
 				{
-					NormalOrders.dequeue(npOrd);
+					npOrd = NormalOrders.getEntry(i);
 					if (npOrd->GetID() == id) {
 						delete npOrd;
-						waitingOrders--;
+						NormalOrders.remove(i);
 						nOrderCount--;
+						waitingOrders--;
+						return true;
 					}
-					else
-						temp.enqueue(npOrd);
 				}
-				while (!temp.isEmpty())
-				{
-					temp.dequeue(npOrd);
-					NormalOrders.enqueue(npOrd);
-				}
-				return true;
 			}
 		}
 	}
@@ -136,7 +130,8 @@ void Region::assign(Restaurant* pRest)
 		waitingOrders--;
 	}
 	if (nOrderCount > 0) {
-		NormalOrders.dequeue(pOrd);
+		pOrd = NormalOrders.getEntry(nOrderCount);
+		NormalOrders.remove(nOrderCount);
 		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
 		pRest->DecrementCount();

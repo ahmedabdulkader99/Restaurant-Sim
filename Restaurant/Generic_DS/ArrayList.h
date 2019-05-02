@@ -63,12 +63,12 @@ bool ArrayList<T>::remove(int position)
 	bool ableToRemove = (position >= 1) && (position <= itemCount);
 	if (ableToRemove)
 	{
-		for (int fromIndex = position, toIndex = fromIndex - 1; fromIndex < itemCount; fromIndex++, toIndex++)
+		for (int fromIndex = position, toIndex = fromIndex - 1; fromIndex <= itemCount; fromIndex++, toIndex++)
 			items[toIndex] = items[fromIndex];
 		itemCount--;
 	}
 
-	return ableToremove;
+	return ableToRemove;
 }
 
 

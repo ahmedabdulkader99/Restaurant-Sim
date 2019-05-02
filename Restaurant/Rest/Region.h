@@ -16,7 +16,7 @@ private:
 	REGION region;
 	//Orders DS
 	PriorityQueue<Order*> VIPOrders;
-	Queue<Order*> NormalOrders;
+	ArrayList<Order*> NormalOrders;
 	Queue<Order*> FrozenOrders;
 	Queue<Order*> inService;
 	int totalOrders;
