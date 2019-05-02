@@ -19,6 +19,7 @@ protected:
 
 	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
 	
+	bool isAssigned;
 	
 	//
 	// TODO: Add More Data Members As Needed
@@ -31,11 +32,11 @@ public:
 
 	int GetType() const;
 	REGION GetRegion() const;
-
+	void promote(int exm);
 	void SetDistance(int d);
 	int GetDistance() const;
 
-	bool operator >(const Order& Ord) const;
+	bool operator <=(const Order& Ord) const;
 
 	//
 	// TODO: Add More Member Functions As Needed

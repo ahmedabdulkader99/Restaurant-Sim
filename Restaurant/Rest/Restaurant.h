@@ -43,11 +43,11 @@ public:
 
 	//Implementation funcs
 	void AddOrder(Order* pOrd);
-	void Remove(int id);
+	void RemoveOrder(int id);
 	void DecrementCount();
 	void PrintOrder(Order* pOrd);
 	void unPrintOrder(int id);
-
+	void promoteOrder(int id, int exm);
 };
 
 #endif

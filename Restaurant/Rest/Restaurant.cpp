@@ -121,7 +121,7 @@ void Restaurant::AddOrder(Order* pOrd)
 	}
 }
 
-void Restaurant::Remove(int id)
+void Restaurant::RemoveOrder(int id)
 {
 	activeCount--;
 	pGUI->RemoveOrderFromDrawing(id);
@@ -146,6 +146,16 @@ void Restaurant::PrintOrder(Order* pOrd)
 void Restaurant::unPrintOrder(int id)
 {
 	pGUI->RemoveOrderFromDrawing(id);
+}
+
+void Restaurant::promoteOrder(int id, int exm)
+{
+	for (int i = 0; i < 4; i++) {
+		if (region[i]->HasOrder(id)) {
+			region[i]->PromoteOrder(id, exm);
+			return;
+		}
+	}
 }
 
 void Restaurant::RunSimulation()

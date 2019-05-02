@@ -86,7 +86,6 @@ bool Region::RemoveOrder(int id)
 	{
 		if (id == orderInRegion[i].ID) 
 		{
-			Queue<Order*> temp;
 			if (orderInRegion[i].TYPE == 'N') {
 			
 				Order* npOrd;
@@ -98,6 +97,33 @@ bool Region::RemoveOrder(int id)
 						NormalOrders.remove(i);
 						nOrderCount--;
 						waitingOrders--;
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool Region::PromoteOrder(int id, int exm)
+{
+	for (int i = 0; i < totalOrders; i++)
+	{
+		if (id == orderInRegion[i].ID)
+		{			
+			if (orderInRegion[i].TYPE == 'N') {
+
+				Order* npOrd;
+				for (int i(1); i <= nOrderCount; i++)
+				{
+					npOrd = NormalOrders.getEntry(i);
+					if (npOrd->GetID() == id) {
+						npOrd->promote(exm);
+						NormalOrders.remove(i);
+						VIPOrders.enqueue(npOrd);
+						nOrderCount--;
+						vOrderCount++;
 						return true;
 					}
 				}

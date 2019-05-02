@@ -33,7 +33,7 @@ Node<T>* LinkedSortedList<T>::getNodeBefore(const T& anEntry) const
 {
 	Node<T>* curPtr = headPtr;
 	Node<T>* prevPtr = nullptr;
-	while ((curPtr != nullptr) && (*anEntry > *curPtr->getItem()))
+	while ((curPtr != nullptr) && (*anEntry <= *curPtr->getItem()))
 	{
 		prevPtr = curPtr;
 		curPtr = curPtr->getNext();

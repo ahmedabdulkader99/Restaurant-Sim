@@ -2,6 +2,7 @@
 #define _PROMOTION_EVENT_h
 
 #include "Event.h"
+#include "../Rest/Restaurant.h"
 
 
 //class for the promotion event
