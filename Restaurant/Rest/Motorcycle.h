@@ -1,7 +1,7 @@
 #ifndef __MOTORCYCLE_H_
 #define __MOTORCYCLE_H_
 
-
+#include "..\Rest\Order.h"
 #include "..\Defs.h"
 
 #pragma once
@@ -13,10 +13,15 @@ class Motorcycle
 	int speed;		//meters it can move in one clock tick (in one timestep)
 	REGION	region;	//region of the motorcycle
 	STATUS	status;	//idle or in-service
+	Order* Ord;
+
+	int returnTime;
 
 public:
 	Motorcycle();
 	Motorcycle(ORD_TYPE motoType, int s, REGION R);
+	void assign(Order* pOrd);
+	bool isIdle() const;
 };
 
 #endif

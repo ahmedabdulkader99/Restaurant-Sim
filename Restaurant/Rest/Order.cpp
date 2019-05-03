@@ -56,6 +56,16 @@ int Order::GetDistance() const
 	return Distance;
 }
 
+int Order::getServTime() const
+{
+	return ServTime;
+}
+
+int Order::getFinishTime() const
+{
+	return FinishTime;
+}
+
 int Order::getArrivalTime() const
 {
 	return ArrTime;

@@ -42,7 +42,8 @@ public:
 	void DecrementCount();
 	void PrintOrder(Order* pOrd);
 	void unPrintOrder(int id);
-	void promoteOrder(int id, int exm);
+	void promoteOrder(int id, int exm);	
+	
 };
 
 #endif

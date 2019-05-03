@@ -35,6 +35,8 @@ public:
 	void promote(int exm);
 	void SetDistance(int d);
 	int GetDistance() const;
+	int getServTime() const;
+	int getFinishTime() const;
 	int getArrivalTime() const;
 	bool operator <=(const Order& Ord) const;
 

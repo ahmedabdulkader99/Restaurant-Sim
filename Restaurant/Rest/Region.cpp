@@ -134,13 +134,13 @@ bool Region::PromoteOrder(int id, int exm)
 }
 
 
-void Region::assign(Restaurant* pRest, int timeStep)
+void Region::updateRegion(Restaurant* pRest, int timeStep) //HERE
 {
 	Order* pOrd;
 	if (vOrderCount > 0) {
 		pOrd = VIPOrders.peek();
+		if(assign(pOrd, pRest, timeStep))
 		VIPOrders.dequeue();
-		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
 		pRest->DecrementCount();
 		vOrderCount--;
@@ -148,7 +148,6 @@ void Region::assign(Restaurant* pRest, int timeStep)
 	}
 	if (fOrderCount > 0) {
 		FrozenOrders.dequeue(pOrd);
-		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
 		pRest->DecrementCount();
 		fOrderCount--;
@@ -157,9 +156,6 @@ void Region::assign(Restaurant* pRest, int timeStep)
 	if (nOrderCount > 0) {
 		pOrd = NormalOrders.getEntry(1);
 		NormalOrders.remove(1);
-		inService.enqueue(pOrd);
-		pRest->unPrintOrder(pOrd->GetID());
-		pRest->DecrementCount();
 		nOrderCount--;
 		waitingOrders--;
 	}
@@ -186,4 +182,105 @@ void Region::checkForAutoPromo(int timeStep)
 			RemoveCheck = true;
 		}
 	}
+}
+
+bool Region::assign(Order* pOrd, Restaurant* pRest, int timeStep)
+{
+	bool assigned = false;
+	int Speed;
+	Motorcycle* pMoto;
+	switch (pOrd->GetType())
+	{
+	case (TYPE_NRM):
+		if (getAvailableMotoN(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = normalSpeed;
+			assigned = true;
+		}
+		else if (getAvailableMotoV(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = fastSpeed;
+			assigned = true;
+		}			
+		break;
+	case(TYPE_FROZ):
+		if (getAvailableMotoF(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = frozenSpeed;
+			assigned = true;
+		}
+		break;
+	case(TYPE_VIP):
+		if (getAvailableMotoV(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = fastSpeed;
+			assigned = true;
+		}
+		else if (getAvailableMotoN(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = normalSpeed;
+			assigned = true;
+		}
+		else if (getAvailableMotoF(pMoto))
+		{
+			pMoto->assign(pOrd);
+			Speed = frozenSpeed;
+			assigned = true;
+		}
+		break;
+	}
+	if (assigned)
+	{
+		inService.enqueue(pOrd);
+		pRest->unPrintOrder(pOrd->GetID());
+		pRest->DecrementCount();
+		pOrd->assignOrd(timeStep, Speed);
+	}	
+}
+
+bool Region::getAvailableMotoN(Motorcycle*& pMoto)
+{
+	for (int i(1); i < norCount; i++)
+	{
+		Motorcycle* M = &normalMotos.getEntry(i);
+		if (M->isIdle())
+		{
+			pMoto = M;
+			return true;
+		}		
+	}
+	return false;
+}
+
+bool Region::getAvailableMotoF(Motorcycle*& pMoto)
+{
+	for (int i(1); i < norCount; i++)
+	{
+		Motorcycle* M = &frozenMotos.getEntry(i);
+		if (M->isIdle())
+		{
+			pMoto = M;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Region::getAvailableMotoV(Motorcycle*& pMoto)
+{
+	for (int i(1); i < norCount; i++)
+	{
+		Motorcycle* M = &fastMotos.getEntry(i);
+		if (M->isIdle())
+		{
+			pMoto = M;
+			return true;
+		}
+	}
+	return false;
 }

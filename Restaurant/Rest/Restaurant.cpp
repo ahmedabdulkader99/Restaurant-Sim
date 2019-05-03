@@ -184,7 +184,7 @@ void Restaurant::Interactive()
 	{
 
 		for (int i = 0; i < 4; i++) {
-			region[i]->assign(this, CurrentTimeStep);
+			region[i]->updateRegion(this, CurrentTimeStep);
 		}
 
 		ExecuteEvents(CurrentTimeStep);
