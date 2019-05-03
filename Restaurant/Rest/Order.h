@@ -17,31 +17,28 @@ protected:
 
 	int priority;
 
-	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
+	int ArrTime, ServTime, WaitTime, FinishTime;	//arrival, service start, and finish times
 	
 	bool isAssigned;
 	
-	//
-	// TODO: Add More Data Members As Needed
-	//
+	
 
 public:
 	Order(int id, ORD_TYPE r_Type, REGION r_region, int d, double m, int at);
 
 	int GetID();
 
+	void assignOrd(int T, int S);
+
 	int GetType() const;
 	REGION GetRegion() const;
 	void promote(int exm);
 	void SetDistance(int d);
 	int GetDistance() const;
-
+	int getArrivalTime() const;
 	bool operator <=(const Order& Ord) const;
 
-	//
-	// TODO: Add More Member Functions As Needed
-	//
-
+	
 };
 
 #endif

@@ -25,15 +25,10 @@ private:
 	int VIPMotoCount;
 	int normalMotoCount;
 	int frozenMotoCount;
-	
-	//
-	// TODO: Add More Data Members As Needed
-	//
 
-	
 
 public:
-	
+
 	Restaurant();
 	~Restaurant();
 	void AddEvent(Event* pE);	//adds a new event to the queue of events

@@ -16,6 +16,15 @@ int Order::GetID()
 	return ID;
 }
 
+void Order::assignOrd(int T, int S)
+{
+	ServTime = Distance / S;
+	WaitTime = T - ArrTime;
+	FinishTime = ArrTime + WaitTime + ServTime;
+
+	isAssigned = true;
+}
+
 
 int Order::GetType() const
 {
@@ -45,6 +54,11 @@ void Order::SetDistance(int d)
 int Order::GetDistance() const
 {
 	return Distance;
+}
+
+int Order::getArrivalTime() const
+{
+	return ArrTime;
 }
 
 bool Order::operator<=(const Order& Ord) const

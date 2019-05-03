@@ -53,7 +53,8 @@ public:
 	void AddOrder(Order* pOrd);
 	bool RemoveOrder(int id);
 	bool PromoteOrder(int id, int exm);
-	void assign(Restaurant* pRest);
+	void assign(Restaurant* pRest, int timeStep);
+	void checkForAutoPromo(int timeStep);
 };
 
 #endif 

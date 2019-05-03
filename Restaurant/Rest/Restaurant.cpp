@@ -158,6 +158,7 @@ void Restaurant::promoteOrder(int id, int exm)
 	}
 }
 
+
 void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
@@ -183,7 +184,7 @@ void Restaurant::Interactive()
 	{
 
 		for (int i = 0; i < 4; i++) {
-			region[i]->assign(this);
+			region[i]->assign(this, CurrentTimeStep);
 		}
 
 		ExecuteEvents(CurrentTimeStep);

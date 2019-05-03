@@ -61,7 +61,7 @@ void Region::AddOrder(Order * pOrd)
 	switch (pOrd->GetType()) 
 	{
 	case (TYPE_NRM):
-		NormalOrders.insert(1, pOrd);
+		NormalOrders.insert(nOrderCount + 1, pOrd);
 		orderInRegion[totalOrders].TYPE = 'N';
 		nOrderCount++;
 		break;
@@ -134,7 +134,7 @@ bool Region::PromoteOrder(int id, int exm)
 }
 
 
-void Region::assign(Restaurant* pRest)
+void Region::assign(Restaurant* pRest, int timeStep)
 {
 	Order* pOrd;
 	if (vOrderCount > 0) {
@@ -146,7 +146,6 @@ void Region::assign(Restaurant* pRest)
 		vOrderCount--;
 		waitingOrders--;
 	}
-
 	if (fOrderCount > 0) {
 		FrozenOrders.dequeue(pOrd);
 		inService.enqueue(pOrd);
@@ -156,12 +155,35 @@ void Region::assign(Restaurant* pRest)
 		waitingOrders--;
 	}
 	if (nOrderCount > 0) {
-		pOrd = NormalOrders.getEntry(nOrderCount);
-		NormalOrders.remove(nOrderCount);
+		pOrd = NormalOrders.getEntry(1);
+		NormalOrders.remove(1);
 		inService.enqueue(pOrd);
 		pRest->unPrintOrder(pOrd->GetID());
 		pRest->DecrementCount();
 		nOrderCount--;
 		waitingOrders--;
+	}
+
+	checkForAutoPromo(timeStep);
+}
+
+void Region::checkForAutoPromo(int timeStep)
+{
+	int Count = nOrderCount;
+	int PromoC = 0;
+	bool RemoveCheck = false;
+	for (int i(1); i <= Count; i++)
+	{
+		Order* pOrd;
+		if (!RemoveCheck)
+			pOrd = NormalOrders.getEntry(i);
+		else
+			PromoC++;
+			pOrd = NormalOrders.getEntry(i-PromoC);
+		if (timeStep - pOrd->getArrivalTime() > autoPromotion)
+		{
+			PromoteOrder(pOrd->GetID(), 0);
+			RemoveCheck = true;
+		}
 	}
 }
