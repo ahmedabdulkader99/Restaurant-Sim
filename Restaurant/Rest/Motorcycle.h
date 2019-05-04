@@ -20,6 +20,7 @@ class Motorcycle
 public:
 	Motorcycle();
 	Motorcycle(ORD_TYPE motoType, int s, REGION R);
+	bool checkIfArrived(int timeStep);
 	void assign(Order* pOrd);
 	bool isIdle() const;
 };

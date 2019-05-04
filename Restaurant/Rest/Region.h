@@ -31,9 +31,9 @@ private:
 	int vOrderCount;
 	activeOrders orderInRegion[100];
 	//Motorcycles DS
-	ArrayList<Motorcycle> fastMotos;
-	ArrayList<Motorcycle> normalMotos;
-	ArrayList<Motorcycle> frozenMotos;
+	ArrayList<Motorcycle*> fastMotos;
+	ArrayList<Motorcycle*> normalMotos;
+	ArrayList<Motorcycle*> frozenMotos;
 	int fstCount;
 	int norCount;
 	int frzCount;
@@ -54,6 +54,7 @@ public:
 	bool RemoveOrder(int id);
 	bool PromoteOrder(int id, int exm);
 	void updateRegion(Restaurant* pRest, int timeStep);
+	void updateMotorcycles(int T);
 	void checkForAutoPromo(int timeStep);
 	bool assign(Order* pOrd, Restaurant* pRest, int timeStep);
 	bool getAvailableMotoN(Motorcycle* &pMoto);
