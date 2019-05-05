@@ -7,7 +7,7 @@ Region::Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int 
 	VIPOrders(), NormalOrders(), FrozenOrders(),
 	region(R), autoPromotion(autoP),
 	nOrderCount(0), fOrderCount(0), vOrderCount(0),
-	inService(), waitingOrders(0)
+	inService(), inServiceCount(0), Finished(), finishedCount(0), waitingOrders(0)
 {
 	for (int i(1); i <= nc; i++)
 	{
@@ -136,6 +136,8 @@ bool Region::PromoteOrder(int id, int exm)
 
 void Region::updateRegion(Restaurant* pRest, int timeStep) //HERE
 {
+	updateOrders(timeStep, pRest);
+
 	updateMotorcycles(timeStep);
 
 	Order* pOrd;
@@ -192,6 +194,29 @@ void Region::updateMotorcycles(int T)
 	}
 }
 
+void Region::updateOrders(int T, Restaurant* pRest)
+{
+	int Count = inServiceCount;
+	int fCount = 0;
+	bool RemoveCheck = false;
+	ArrayList<Order*> auxFinished;
+	for (int i(1); i <= Count; i++) {
+		Order* pOrd;
+		if (RemoveCheck)
+			fCount++;
+		pOrd = inService.getEntry(i - fCount);
+		RemoveCheck = false;
+		if (pOrd->getFinishTime() < T) {
+			auxFinished.insert(1,pOrd);
+			finishedCount++;
+			pRest->AddToFinished(pOrd);
+			inService.remove(i - fCount);
+			inServiceCount--;
+			RemoveCheck = true;
+		}
+	}
+}
+
 void Region::checkForAutoPromo(int timeStep)
 {
 	int Count = nOrderCount;
@@ -204,7 +229,7 @@ void Region::checkForAutoPromo(int timeStep)
 			pOrd = NormalOrders.getEntry(i);
 		else
 			PromoC++;
-			pOrd = NormalOrders.getEntry(i-PromoC);
+		pOrd = NormalOrders.getEntry(i-PromoC);
 		if (timeStep - pOrd->getArrivalTime() > autoPromotion)
 		{
 			PromoteOrder(pOrd->GetID(), 0);
@@ -264,7 +289,8 @@ bool Region::assign(Order* pOrd, Restaurant* pRest, int timeStep)
 	}
 	if (assigned)
 	{
-		inService.enqueue(pOrd);
+		inService.insert(1,pOrd);
+		inServiceCount++;
 		pRest->unPrintOrder(pOrd->GetID());
 		pRest->DecrementCount();
 	}	

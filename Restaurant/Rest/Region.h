@@ -18,7 +18,8 @@ private:
 	PriorityQueue<Order*> VIPOrders;
 	ArrayList<Order*> NormalOrders;
 	Queue<Order*> FrozenOrders;
-	Queue<Order*> inService;
+	ArrayList<Order*> inService;
+	Queue<Order*> Finished;
 	int totalOrders;
 	int waitingOrders;
 	struct activeOrders {
@@ -29,6 +30,8 @@ private:
 	int nOrderCount;
 	int fOrderCount;
 	int vOrderCount;
+	int inServiceCount;
+	int finishedCount;
 	activeOrders orderInRegion[100];
 	//Motorcycles DS
 	ArrayList<Motorcycle*> fastMotos;
@@ -55,6 +58,7 @@ public:
 	bool PromoteOrder(int id, int exm);
 	void updateRegion(Restaurant* pRest, int timeStep);
 	void updateMotorcycles(int T);
+	void updateOrders(int T, Restaurant* pRest);
 	void checkForAutoPromo(int timeStep);
 	bool assign(Order* pOrd, Restaurant* pRest, int timeStep);
 	bool getAvailableMotoN(Motorcycle* &pMoto);

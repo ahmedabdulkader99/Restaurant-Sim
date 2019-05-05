@@ -5,6 +5,7 @@
 #include "..\CMUgraphicsLib\CMUgraphics.h"
 #include "..\GUI\GUI.h"
 #include "..\Generic_DS\Queue.h"
+#include "..\Generic_DS\PriorityQueue.h"
 #include "..\Events\Event.h"
 
 #include "Order.h"
@@ -19,6 +20,24 @@ private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
 	Region* region[4];
+	struct finishedOrderStr {
+		int ID;
+		int FT;
+		int ST;
+		int WT;
+		int AT;
+
+		bool finishedOrderStr::operator<=(const finishedOrderStr& fOrd){
+			if (FT > fOrd.FT)
+				return true;
+			else if (FT == fOrd.FT) {
+				if (ST > fOrd.ST)
+					return true;
+			}
+			return false;
+		}
+	};
+	PriorityQueue<finishedOrderStr*> fOrderList;
 	int eventsCount;
 	int activeCount;
 	int totalMotoCount;
@@ -39,6 +58,7 @@ public:
 	//Implementation funcs
 	void AddOrder(Order* pOrd);
 	void RemoveOrder(int id);
+	void AddToFinished(Order* pOrd);
 	void DecrementCount();
 	void PrintOrder(Order* pOrd);
 	void unPrintOrder(int id);

@@ -133,6 +133,18 @@ void Restaurant::RemoveOrder(int id)
 	}
 }
 
+void Restaurant::AddToFinished(Order* pOrd)
+{
+	finishedOrderStr* F = new finishedOrderStr;
+	F->AT = pOrd->getArrivalTime();
+	F->FT = pOrd->getFinishTime();
+	F->ID = pOrd->GetID();
+	F->ST = pOrd->getServTime();
+	F->WT = F->FT - (F->ST + F->AT);
+
+	fOrderList.enqueue(F);
+}
+
 void Restaurant::DecrementCount()
 {
 	activeCount--;
