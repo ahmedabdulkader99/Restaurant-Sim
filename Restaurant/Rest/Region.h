@@ -37,6 +37,7 @@ private:
 	ArrayList<Motorcycle*> fastMotos;
 	ArrayList<Motorcycle*> normalMotos;
 	ArrayList<Motorcycle*> frozenMotos;
+	Queue<Motorcycle*> JustAssigned;
 	int fstCount;
 	int norCount;
 	int frzCount;
@@ -79,6 +80,8 @@ public:
 	bool getAvailableMotoN(Motorcycle* &pMoto);
 	bool getAvailableMotoF(Motorcycle*& pMoto);
 	bool getAvailableMotoV(Motorcycle*& pMoto);
+
+	Queue<Motorcycle*> getLastAssigned();
 
 	int getActiveN();
 	int getActiveF();

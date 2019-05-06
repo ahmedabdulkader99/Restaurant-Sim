@@ -41,3 +41,38 @@ bool Motorcycle::isIdle() const
 		return true;
 	return false;
 }
+
+int Motorcycle::getOrderInfo(char &Type)
+{
+	if (status == SERV) {
+		switch (Ord->GetType()) {
+		case (TYPE_NRM):
+			Type = 'N';
+			break;
+		case (TYPE_FROZ):
+			Type = 'F';
+			break;
+		case (TYPE_VIP):
+			Type = 'V';
+			break;
+		}
+		return Ord->GetID();
+	}
+}
+
+int Motorcycle::getID()
+{
+	return ID;
+}
+
+char Motorcycle::getType()
+{
+	switch (type) {
+	case(TYPE_NRM):
+		return 'N';
+	case(TYPE_FROZ):
+		return 'F';
+	case(TYPE_VIP):
+		return 'V';
+	}
+}

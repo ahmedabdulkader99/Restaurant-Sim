@@ -23,6 +23,9 @@ public:
 	bool checkIfArrived(int timeStep);
 	void assign(Order* pOrd);
 	bool isIdle() const;
+	int getOrderInfo(char &T);
+	int getID();
+	char getType();
 };
 
 #endif

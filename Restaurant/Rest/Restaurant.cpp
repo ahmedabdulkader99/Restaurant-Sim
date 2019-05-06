@@ -213,39 +213,54 @@ void Restaurant::Interactive()
 
 		//print current timestep and extra details
 		{
-			char msg[300] = { 0 };
-			char timestep[5];
-			char active[5];
-			char fmoto[5];
-			char vmoto[5];
-			char nmoto[5];
-			char counts[5];
+			string msg;
+			string timestep;
+			string active;
+			string counts[4];
+			int NumCounts[4];
 			int TotalCount = 0;
 			for (int i = 0; i < 4; i++) {
 				TotalCount += region[i]->GetWaitingOrders();
+				NumCounts[i] = region[i]->GetWaitingOrders();
+				counts[i] = to_string(NumCounts[i]);
 			}
-			itoa(CurrentTimeStep, timestep, 10);
-			itoa(TotalCount, active, 10);
-			itoa(frozenMotoCount, fmoto, 10);
-			itoa(VIPMotoCount, vmoto, 10);
-			itoa(normalMotoCount, nmoto, 10);
-			strcat(msg, "Time: ");
-			strcat(msg, timestep);
-			strcat(msg, " // Active Orders: ");
-			strcat(msg, active);
-			strcat(msg, " == | A:");
-			itoa(region[0]->GetWaitingOrders(), counts, 10);
-			strcat(msg, counts);
-			strcat(msg, " | B:");
-			itoa(region[1]->GetWaitingOrders(), counts, 10);
-			strcat(msg, counts);
-			strcat(msg, " | C:");
-			itoa(region[2]->GetWaitingOrders(), counts, 10);
-			strcat(msg, counts);
-			strcat(msg, " | D:");
-			itoa(region[3]->GetWaitingOrders(), counts, 10);
-			strcat(msg, counts);
-			strcat(msg, " | ");
+			timestep = to_string(CurrentTimeStep);
+			active = to_string(TotalCount);
+			string time = "Time: " + timestep;
+			string ActiveCnt = " // Active Orders: " + active + " ==";
+			string Counts;
+			for (int i = 0; i < 4; i++) {
+				char R = 65 + i;
+				string af = ":";
+				string bf = " | ";
+				Counts += (bf + R + af + counts[i]);
+			}
+			
+
+			Queue<Motorcycle*> M;
+			string TOTALMOTO;
+			for (int i = 0; i < 4; i++) {
+				M = region[i]->getLastAssigned();
+				Motorcycle* pMoto;
+				string assignedMoto;
+				int oId, mId, Mcount(0);
+				char oType, mType;
+				while (!M.isEmpty()) {
+					M.dequeue(pMoto);
+					oId = pMoto->getOrderInfo(oType);
+					mId = pMoto->getID();
+					mType = pMoto->getType();
+					Mcount++;
+					assignedMoto += (mType + to_string(mId) + "(" + oType + to_string(oId) + ")"+" ");
+				}
+				if (Mcount > 0) {
+					char r = 65 + i;
+					string sep = ": ";
+					TOTALMOTO += (r + sep + assignedMoto);
+				}
+
+			}
+			msg = time + ActiveCnt + Counts + " | " + TOTALMOTO;
 			int nOrd[4];
 			int fOrd[4];
 			int vOrd[4];

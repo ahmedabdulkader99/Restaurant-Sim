@@ -324,6 +324,7 @@ bool Region::assign(Order* pOrd, Restaurant* pRest, int timeStep)
 	}
 	if (assigned)
 	{
+		JustAssigned.enqueue(pMoto);
 		inService.insert(1,pOrd);
 		inServiceCount++;
 		pRest->unPrintOrder(pOrd->GetID());
@@ -375,6 +376,17 @@ bool Region::getAvailableMotoV(Motorcycle*& pMoto)
 		}
 	}
 	return false;
+}
+
+Queue<Motorcycle*> Region::getLastAssigned()
+{
+	Queue<Motorcycle*> M;
+	Motorcycle* pMoto;
+	while (!JustAssigned.isEmpty()) {
+		JustAssigned.dequeue(pMoto);
+		M.enqueue(pMoto);
+	}
+	return M;
 }
 
 int Region::getTotalServ()
