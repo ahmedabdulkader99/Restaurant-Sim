@@ -2,6 +2,7 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 #include "Restaurant.h"
@@ -11,7 +12,7 @@ using namespace std;
 #include "Region.h"
 
 Restaurant::Restaurant()
-	:activeCount(0)
+	:activeCount(0), finishedOrderCount(0), inServiceOrderCount(0)
 {
 	pGUI = NULL;
 
@@ -142,6 +143,8 @@ void Restaurant::AddToFinished(Order* pOrd)
 	F->ST = pOrd->getServTime();
 	F->WT = F->FT - (F->ST + F->AT);
 
+	finishedOrderCount++;
+
 	fOrderList.enqueue(F);
 }
 
@@ -192,7 +195,7 @@ void Restaurant::RunSimulation()
 void Restaurant::Interactive()
 {
 	int CurrentTimeStep = 0;
-	while (!EventsQueue.isEmpty() || activeCount>0)
+	while (!EventsQueue.isEmpty() || activeCount>0 || inServiceOrderCount>0)
 	{
 
 		for (int i = 0; i < 4; i++) {
@@ -201,7 +204,10 @@ void Restaurant::Interactive()
 
 		ExecuteEvents(CurrentTimeStep);
 
-
+		inServiceOrderCount = 0;
+		for (int i = 0; i < 4; i++) {
+			inServiceOrderCount += region[i]->GetInServiceOrders();
+		}
 
 
 		//print current timestep and extra details
@@ -280,11 +286,61 @@ void Restaurant::Interactive()
 		pGUI->PrintMessage(msg);
 
 		pGUI->UpdateInterface();
-		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
 	}
 	pGUI->PrintMessage("Generated and assigned all orders ! Click to exit...");
 	pGUI->waitForClick();
+	//Output
+	
+	ofstream out("outputfile.txt");
+	{
+		out << "FT" << "\t" << "ID" << "\t" << "AT" << "\t" << "WT" << "\t" << "ST" << endl;
+		for (int i = 0; i < finishedOrderCount; i++)
+		{
+			finishedOrderStr* F = fOrderList.peek();
+			fOrderList.dequeue();
+			out << F->FT << "\t" << F->ID << "\t" << F->AT << "\t" << F->WT << "\t" << F->ST <<endl;
+		}
+		float RestTotalWait(0), RestTotalServ(0);
+		int	RestCount(0), RestTotalN(0), RestTotalF(0), RestTotalV(0);
+		int RestMotoN(0), RestMotoF(0), RestMotoV(0);
+		for (int i = 0; i < 4; i++) {
+			char reg = 65 + i;
+			out << "Region " << reg << ":"<< endl;
+			float avgwait = float(region[i]->getTotalWait()) / float(region[i]->getCount());
+			float avgserv = float(region[i]->getTotalServ()) / float(region[i]->getCount());
+			int Norm = region[i]->getTotalNCount();
+			int froz = region[i]->getTotalFCount();
+			int vip = region[i]->getTotalVCount();
+			int orders = Norm + froz + vip;
+			int nor = region[i]->getNMotoCount();
+			int fst = region[i]->getVMotoCount();
+			int frz = region[i]->getFMotoCount();
+			int MotorC = nor + fst + frz;
+
+			RestTotalWait += region[i]->getTotalWait(); 
+			RestTotalServ += region[i]->getTotalServ(); 
+			RestCount += region[i]->getCount(); 
+			RestTotalN += Norm; 
+			RestTotalF += froz; 
+			RestTotalV += vip;
+			RestMotoN += nor; 
+			RestMotoF += frz; 
+			RestMotoV += fst;
+
+			/*Orders: 124 [Norm:100, Froz:15, VIP:9]
+			MotorC: 9 [Norm:5, Froz:3, VIP:1]
+			Avg Wait = 12.3, Avg Serv = 25.65*/
+			out << "\t" << "Orders:" << orders << "[Norm:" << Norm << ", Froz:" << froz << ", VIP: " << vip << "]" << endl;
+			out << "\t" << "MotorC:" << MotorC << "[Norm:" << nor << ", Froz:" << frz << ",VIP: " << fst << "]" << endl;
+			out << "\t" << "Avg Wait=" << setprecision(3) << avgwait << ", Avg Serv=" << avgserv << endl;
+		}
+
+		out << "Total for Restaurant:" << endl;
+		out << "\t" << "Orders:" << (RestTotalF + RestTotalN + RestTotalV) << "[Norm:" << RestTotalN << ", Froz:" << RestTotalF << ", VIP: " << RestTotalV << "]" << endl;
+		out << "\t" << "MotorC:" << (RestMotoN + RestMotoF + RestMotoV) << "[Norm:" << RestMotoN << ", Froz:" << RestMotoF << ",VIP: " << RestMotoV << "]" << endl;
+		out << "\t" << "Avg Wait=" << setprecision(3) << (RestTotalWait / RestCount) << ", Avg Serv=" << (RestTotalServ / RestCount) << endl;
+	}
 }
 
 
@@ -311,62 +367,27 @@ void Restaurant::ExecuteEvents(int CurrentTimeStep)
 
 }
 
-
-Restaurant::~Restaurant()
+void Restaurant::finishedOrderStr::output()
 {
-		delete pGUI;
+	cout << FT << "\t" << ID << "\t" << AT << "\t" << WT << "\t" << ST;
+}
+
+bool Restaurant::finishedOrderStr::operator<=(const finishedOrderStr& fOrd) {
+	if (FT > fOrd.FT)
+		return true;
+	else if (FT == fOrd.FT) {
+		if (ST > fOrd.ST)
+			return true;
+	}
+	return false;
 }
 
 
+Restaurant::~Restaurant()
+{
+	delete pGUI;
+}
 
-
-////////////////////////////////////////////////////////////////////////////////
-	//
-	////
-	//// THIS IS JUST A DEMO FUNCTION
-	//// IT SHOULD BE REMOVED IN PHASE 1 AND PHASE 2
-	//
-	//int EventCnt;	
-	//Order* pOrd;
-	//Event* pEv;
-	//srand(time(NULL));
-
-	//pGUI->PrintMessage("Just a Demo. Enter EVENTS Count(next phases should read I/P filename):");
-	//EventCnt = atoi(pGUI->GetString().c_str());	//get user input as a string then convert to integer
-
-	//pGUI->UpdateInterface();
-
-	//pGUI->PrintMessage("Generating orders randomly... In next phases, orders should be loaded from a file");
-	//	
-	//int EvTime = 0;
-	//
-	////Create Random events
-	////All generated event will be "ArrivalEvents" for the demo
-	//for(int i=0; i<EventCnt; i++)
-	//{
-	//	int O_id = i+1;
-	//	
-	//	//Rendomize order type
-	//	int OType;
-	//	if(i<EventCnt*0.2)	//let 1st 20% of orders be VIP (just for sake of demo)
-	//		OType = TYPE_VIP;
-	//	else if(i<EventCnt*0.5)	
-	//		OType = TYPE_FROZ;	//let next 30% be Frozen
-	//	else
-	//		OType = TYPE_NRM;	//let the rest be normal
-
-	//	
-	//	int reg = rand()% REG_CNT;	//randomize region
-
-	//	int dist = 0;
-	//	int money = 0;
-
-	//	//Randomize event time
-	//	EvTime += rand()%4;
-	//	pEv = new ArrivalEvent(EvTime, O_id, dist, (ORD_TYPE)OType, (REGION)reg, money);
-	//	AddEvent(pEv);
-
-	//}	
 
 
 

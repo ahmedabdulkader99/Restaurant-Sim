@@ -50,6 +50,7 @@ public:
 	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
 	bool HasOrder(int id);
 	int GetWaitingOrders();
+	int GetInServiceOrders();
 	int GetNMotoCount();
 	int GetFMotoCount();
 	int GetVMotoCount();
@@ -64,6 +65,19 @@ public:
 	bool getAvailableMotoN(Motorcycle* &pMoto);
 	bool getAvailableMotoF(Motorcycle*& pMoto);
 	bool getAvailableMotoV(Motorcycle*& pMoto);
+
+	int getTotalWait();
+	int getTotalServ();
+	int getCount();
+
+	int getTotalNCount();
+	int getTotalVCount();
+	int getTotalFCount();
+
+	int getNMotoCount();
+	int getFMotoCount();
+	int getVMotoCount();
+	
 };
 
 #endif 

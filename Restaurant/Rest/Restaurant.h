@@ -26,19 +26,13 @@ private:
 		int ST;
 		int WT;
 		int AT;
-
-		bool finishedOrderStr::operator<=(const finishedOrderStr& fOrd){
-			if (FT > fOrd.FT)
-				return true;
-			else if (FT == fOrd.FT) {
-				if (ST > fOrd.ST)
-					return true;
-			}
-			return false;
-		}
+		void output();
+		bool operator<=(const finishedOrderStr& fOrd);
 	};
 	PriorityQueue<finishedOrderStr*> fOrderList;
 	int eventsCount;
+	int finishedOrderCount;
+	int inServiceOrderCount;
 	int activeCount;
 	int totalMotoCount;
 	int VIPMotoCount;

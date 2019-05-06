@@ -40,6 +40,11 @@ int Region::GetWaitingOrders()
 	return waitingOrders;
 }
 
+int Region::GetInServiceOrders()
+{
+	return inServiceCount;
+}
+
 int Region::GetNMotoCount()
 {
 	return norCount;
@@ -199,7 +204,6 @@ void Region::updateOrders(int T, Restaurant* pRest)
 	int Count = inServiceCount;
 	int fCount = 0;
 	bool RemoveCheck = false;
-	ArrayList<Order*> auxFinished;
 	for (int i(1); i <= Count; i++) {
 		Order* pOrd;
 		if (RemoveCheck)
@@ -207,7 +211,7 @@ void Region::updateOrders(int T, Restaurant* pRest)
 		pOrd = inService.getEntry(i - fCount);
 		RemoveCheck = false;
 		if (pOrd->getFinishTime() < T) {
-			auxFinished.insert(1,pOrd);
+			Finished.enqueue(pOrd);
 			finishedCount++;
 			pRest->AddToFinished(pOrd);
 			inService.remove(i - fCount);
@@ -337,4 +341,91 @@ bool Region::getAvailableMotoV(Motorcycle*& pMoto)
 		}
 	}
 	return false;
+}
+
+int Region::getTotalServ()
+{
+	int TST = 0;
+	for (int i = 0; i < finishedCount; i++) {
+		Order* pOrd;
+		Finished.dequeue(pOrd);
+		int ST = pOrd->getServTime();
+		TST += ST;
+		Finished.enqueue(pOrd);
+	}
+	return TST;
+}
+
+int Region::getCount()
+{
+	return finishedCount;
+}
+
+int Region::getTotalNCount()
+{
+	int C = 0;
+	for (int i = 0; i < finishedCount; i++) {
+		Order* pOrd;
+		Finished.dequeue(pOrd);
+		if (pOrd->GetType() == TYPE_NRM)
+			C++;
+		Finished.enqueue(pOrd);
+	}
+	return C;
+}
+
+int Region::getTotalVCount()
+{
+	int C = 0;
+	for (int i = 0; i < finishedCount; i++) {
+		Order* pOrd;
+		Finished.dequeue(pOrd);
+		if (pOrd->GetType() == TYPE_VIP)
+			C++;
+		Finished.enqueue(pOrd);
+	}
+	return C;
+}
+
+int Region::getTotalFCount()
+{
+	int C = 0;
+	for (int i = 0; i < finishedCount; i++) {
+		Order* pOrd;
+		Finished.dequeue(pOrd);
+		if (pOrd->GetType() == TYPE_FROZ)
+			C++;
+		Finished.enqueue(pOrd);
+	}
+	return C;
+}
+
+int Region::getTotalWait()
+{
+	int TWT = 0;
+	for (int i = 0; i < finishedCount; i++) {
+		Order* pOrd;
+		Finished.dequeue(pOrd);
+		int FT = pOrd->getFinishTime();
+		int ST = pOrd->getServTime();
+		int AT = pOrd->getArrivalTime();
+		TWT += (FT - (ST + AT));
+		Finished.enqueue(pOrd);
+	}
+	return TWT;
+}
+
+int Region::getNMotoCount()
+{
+	return norCount;
+}
+
+int Region::getFMotoCount()
+{
+	return frzCount;
+}
+
+int Region::getVMotoCount()
+{
+	return fstCount;
 }
