@@ -239,6 +239,7 @@ void Restaurant::Interactive()
 
 			Queue<Motorcycle*> M;
 			string TOTALMOTO;
+			int Rcount(0);
 			for (int i = 0; i < 4; i++) {
 				M = region[i]->getLastAssigned();
 				Motorcycle* pMoto;
@@ -246,12 +247,13 @@ void Restaurant::Interactive()
 				int oId, mId, Mcount(0);
 				char oType, mType;
 				while (!M.isEmpty()) {
+					Rcount++;
 					M.dequeue(pMoto);
 					oId = pMoto->getOrderInfo(oType);
 					mId = pMoto->getID();
 					mType = pMoto->getType();
 					Mcount++;
-					assignedMoto += (mType + to_string(mId) + "(" + oType + to_string(oId) + ")"+" ");
+					assignedMoto += (mType + to_string(mId) + "(" + oType + to_string(oId) + ") ");
 				}
 				if (Mcount > 0) {
 					char r = 65 + i;
@@ -260,7 +262,10 @@ void Restaurant::Interactive()
 				}
 
 			}
-			msg = time + ActiveCnt + Counts + " | " + TOTALMOTO;
+			if (Rcount == 0) {
+				TOTALMOTO = "No Motorcycles Assigned at the last timestamp!";
+			}
+			msg = time + ActiveCnt + Counts + " | Assignment=> " + TOTALMOTO;
 			int nOrd[4];
 			int fOrd[4];
 			int vOrd[4];
