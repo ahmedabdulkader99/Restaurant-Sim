@@ -15,7 +15,7 @@ protected:
 	                
 	double totalMoney;	//Total order money
 
-	int priority;
+	double priority;
 
 	int ArrTime, ServTime, WaitTime, FinishTime;	//arrival, service start, and finish times
 	

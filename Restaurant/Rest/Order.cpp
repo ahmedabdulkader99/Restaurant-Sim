@@ -5,7 +5,7 @@ Order::Order(int id,ORD_TYPE r_Type, REGION r_region, int d, double m, int at)
 	:ID(id), type(r_Type), Region(r_region), Distance(d), totalMoney(m), ArrTime(at), ServTime(0), FinishTime(0), isAssigned(false)
 {
 	if (type == TYPE_VIP)
-		priority = totalMoney;
+		priority = 10 * totalMoney / (ArrTime * Distance);
 	else
 		priority = -1;
 }
@@ -42,7 +42,7 @@ void Order::promote(int exm)
 	{
 		type = TYPE_VIP;
 		totalMoney += exm;
-		priority = totalMoney;
+		priority = 10 * totalMoney / (ArrTime * Distance);
 	}		
 }
 
