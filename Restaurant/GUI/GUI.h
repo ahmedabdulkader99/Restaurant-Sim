@@ -64,6 +64,8 @@ private:
 	// At every time step, you should update those pointers 
 	// to point to the current waiting orders only
 	
+	string oCnt[4];
+	string mCnt[4];
 
 
 
@@ -75,7 +77,7 @@ private:
 	void DrawSingleOrder(Order* pO, int RegionCount) const;		//draws ONE order 
 	void DrawOrders() const;		//drwas ALL orders in OrdListForDrawing
 
-
+	void DrawCounts() const;
 
 	void DrawString(const int iX, const int iY, const string Text); // prints a message in the passed coordinates
 	void DrawRestArea() const;	    // draws the restaurant area
@@ -94,7 +96,7 @@ public:
 	// Output Functions  ---------------------------
 	void PrintMessage(string msg) const; // prints a message in the status bar
 
-
+	void UpdateDrawnCounts(int* N, int* F, int* V, int* NM, int* FM, int* VM);
 	void UpdateInterface();
 	void AddOrderForDrawing(Order* pOrd);	//Adds a new order to the drawing list
 	void RemoveOrderFromDrawing(int id); //Removes Order from drawing list

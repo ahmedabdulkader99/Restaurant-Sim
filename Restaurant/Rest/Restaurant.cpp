@@ -192,6 +192,8 @@ void Restaurant::RunSimulation()
 
 }
 
+//Interactive Sim
+
 void Restaurant::Interactive()
 {
 	int CurrentTimeStep = 0;
@@ -209,89 +211,68 @@ void Restaurant::Interactive()
 			inServiceOrderCount += region[i]->GetInServiceOrders();
 		}
 
-
 		//print current timestep and extra details
-		char msg[300] = { 0 };
-		char timestep[5];
-		char active[5];
-		char fmoto[5];
-		char vmoto[5];
-		char nmoto[5];
-		char counts[5];
-		int TotalCount = 0;
-		for (int i = 0; i < 4; i++) {
-			TotalCount += region[i]->GetWaitingOrders();
+		{
+			char msg[300] = { 0 };
+			char timestep[5];
+			char active[5];
+			char fmoto[5];
+			char vmoto[5];
+			char nmoto[5];
+			char counts[5];
+			int TotalCount = 0;
+			for (int i = 0; i < 4; i++) {
+				TotalCount += region[i]->GetWaitingOrders();
+			}
+			itoa(CurrentTimeStep, timestep, 10);
+			itoa(TotalCount, active, 10);
+			itoa(frozenMotoCount, fmoto, 10);
+			itoa(VIPMotoCount, vmoto, 10);
+			itoa(normalMotoCount, nmoto, 10);
+			strcat(msg, "Time: ");
+			strcat(msg, timestep);
+			strcat(msg, " // Active Orders: ");
+			strcat(msg, active);
+			strcat(msg, " == | A:");
+			itoa(region[0]->GetWaitingOrders(), counts, 10);
+			strcat(msg, counts);
+			strcat(msg, " | B:");
+			itoa(region[1]->GetWaitingOrders(), counts, 10);
+			strcat(msg, counts);
+			strcat(msg, " | C:");
+			itoa(region[2]->GetWaitingOrders(), counts, 10);
+			strcat(msg, counts);
+			strcat(msg, " | D:");
+			itoa(region[3]->GetWaitingOrders(), counts, 10);
+			strcat(msg, counts);
+			strcat(msg, " | ");
+			int nOrd[4];
+			int fOrd[4];
+			int vOrd[4];
+			int MnOrd[4];
+			int MfOrd[4];
+			int MvOrd[4];
+			for (int i = 0; i < 4; i++) {
+				nOrd[i] = region[i]->getActiveN();
+				fOrd[i] = region[i]->getActiveF();
+				vOrd[i] = region[i]->getActiveV();
+				MnOrd[i] = region[i]->GetAvNMotoCount();
+				MfOrd[i] = region[i]->GetAvFMotoCount();
+				MvOrd[i] = region[i]->GetAvVMotoCount();
+			}
+
+			pGUI->UpdateDrawnCounts(nOrd, fOrd, vOrd, MnOrd, MfOrd, MvOrd);
+
+			pGUI->PrintMessage(msg);
 		}
-		itoa(CurrentTimeStep, timestep, 10);
-		itoa(TotalCount, active, 10);
-		itoa(frozenMotoCount, fmoto, 10);
-		itoa(VIPMotoCount, vmoto, 10);
-		itoa(normalMotoCount, nmoto, 10);
-		strcat(msg, "Time: ");
-		strcat(msg, timestep);
-		strcat(msg, " // Active Orders: ");
-		strcat(msg, active);
-		strcat(msg, " == | A:");
-		itoa(region[0]->GetWaitingOrders(),counts , 10);
-		strcat(msg, counts);
-		strcat(msg, " | B:");
-		itoa(region[1]->GetWaitingOrders(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | C:");
-		itoa(region[2]->GetWaitingOrders(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | D:");
-		itoa(region[3]->GetWaitingOrders(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | // Normal Motos: ");
-		strcat(msg, " A:");
-		itoa(region[0]->GetNMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | B:");
-		itoa(region[1]->GetNMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | C:");
-		itoa(region[2]->GetNMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | D:");
-		itoa(region[3]->GetNMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " // Frozen Motos: ");
-		strcat(msg, " A:");
-		itoa(region[0]->GetFMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | B:");
-		itoa(region[1]->GetFMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | C:");
-		itoa(region[2]->GetFMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | D:");
-		itoa(region[3]->GetFMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " // Fast Motos: ");
-		strcat(msg, " A:");
-		itoa(region[0]->GetVMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | B:");
-		itoa(region[1]->GetVMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | C:");
-		itoa(region[2]->GetVMotoCount(), counts, 10);
-		strcat(msg, counts);
-		strcat(msg, " | D:");
-		itoa(region[3]->GetVMotoCount(), counts, 10);
-		strcat(msg, counts);
-
-		pGUI->PrintMessage(msg);
-
 		pGUI->UpdateInterface();
+		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
 	}
-	pGUI->PrintMessage("Generated and assigned all orders ! Click to exit...");
+	pGUI->PrintMessage("Generated and assigned all orders ! Click to Generate Output...");
 	pGUI->waitForClick();
+
 	//Output
-	
 	ofstream out("outputfile.txt");
 	{
 		out << "FT" << "\t" << "ID" << "\t" << "AT" << "\t" << "WT" << "\t" << "ST" << endl;
@@ -341,6 +322,8 @@ void Restaurant::Interactive()
 		out << "\t" << "MotorC:" << (RestMotoN + RestMotoF + RestMotoV) << "[Norm:" << RestMotoN << ", Froz:" << RestMotoF << ",VIP: " << RestMotoV << "]" << endl;
 		out << "\t" << "Avg Wait=" << setprecision(3) << (RestTotalWait / RestCount) << ", Avg Serv=" << (RestTotalServ / RestCount) << endl;
 	}
+	pGUI->PrintMessage("Generated Output file! Click to exit...");
+	pGUI->waitForClick();
 }
 
 
@@ -367,6 +350,8 @@ void Restaurant::ExecuteEvents(int CurrentTimeStep)
 
 }
 
+
+/////////////////////////////////// Struct Functions /////////////////////////////////////
 void Restaurant::finishedOrderStr::output()
 {
 	cout << FT << "\t" << ID << "\t" << AT << "\t" << WT << "\t" << ST;

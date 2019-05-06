@@ -40,6 +40,9 @@ private:
 	int fstCount;
 	int norCount;
 	int frzCount;
+	int aFstCount;
+	int aNorCount;
+	int aFrzCount;
 	//Speeds
 	int fastSpeed;
 	int normalSpeed;
@@ -49,22 +52,37 @@ private:
 public:
 	Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int autoP);
 	bool HasOrder(int id);
+
 	int GetWaitingOrders();
 	int GetInServiceOrders();
+
 	int GetNMotoCount();
 	int GetFMotoCount();
 	int GetVMotoCount();
+
+	int GetAvNMotoCount();
+	int GetAvFMotoCount();
+	int GetAvVMotoCount();
+
 	void AddOrder(Order* pOrd);
 	bool RemoveOrder(int id);
 	bool PromoteOrder(int id, int exm);
+
 	void updateRegion(Restaurant* pRest, int timeStep);
 	void updateMotorcycles(int T);
 	void updateOrders(int T, Restaurant* pRest);
+
 	void checkForAutoPromo(int timeStep);
+
 	bool assign(Order* pOrd, Restaurant* pRest, int timeStep);
+
 	bool getAvailableMotoN(Motorcycle* &pMoto);
 	bool getAvailableMotoF(Motorcycle*& pMoto);
 	bool getAvailableMotoV(Motorcycle*& pMoto);
+
+	int getActiveN();
+	int getActiveF();
+	int getActiveV();
 
 	int getTotalWait();
 	int getTotalServ();

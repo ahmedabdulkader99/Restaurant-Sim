@@ -211,10 +211,47 @@ void GUI::DrawOrders() const
 
 }
 
-void GUI::UpdateInterface() 
+void GUI::DrawCounts() const
+{
+	int L = RestWidth / 2;
+	pWind->SetPen(WHITE);
+	pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RestStartX + (int)(0.09 * L), RestStartY + 1 * L / 12, oCnt[0]);
+	pWind->DrawString(RestStartX + (int)(0.09 * L), YHalfDrawingArea + 9 * L / 12, oCnt[3]);
+	pWind->DrawString(WindWidth / 2 + (int)(0.09 * L), RestStartY + 1 * L / 12, oCnt[1]);
+	pWind->DrawString(WindWidth / 2 + (int)(0.09 * L), YHalfDrawingArea + 9 * L / 12, oCnt[2]);
+
+	pWind->SetPen(WHITE);
+	pWind->SetFont(15, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RestStartX + (int)(0.1 * L), RestStartY + 9 * L / 12, mCnt[0]);
+	pWind->DrawString(RestStartX + (int)(0.1 * L), YHalfDrawingArea + 1 * L / 12, mCnt[3]);
+	pWind->DrawString(WindWidth / 2 + (int)(0.1 * L), RestStartY + 9 * L / 12, mCnt[1]);
+	pWind->DrawString(WindWidth / 2 + (int)(0.1 * L), YHalfDrawingArea + 1 * L / 12, mCnt[2]);
+}
+
+void GUI::UpdateDrawnCounts(int* N, int* F, int* V, int* NM, int* FM, int* VM)
+{
+	for (int i = 0; i < 4; i++) {
+		string sN;
+		string sF;
+		string sV;
+		sN = to_string(N[i]);
+		sF = to_string(F[i]);
+		sV = to_string(V[i]);
+		oCnt[i] = "N: " + sN + " F: " + sF + " V: " + sV;
+		sN = to_string(NM[i]);
+		sF = to_string(FM[i]);
+		sV = to_string(VM[i]);
+		mCnt[i] = "Nor: " + sN + " Frz: " + sF + " Fst: " + sV;
+	}
+
+}
+
+void GUI::UpdateInterface()
 {
 	ClearDrawingArea();
 	DrawRestArea();
+	DrawCounts();
 	DrawOrders();
 }
 

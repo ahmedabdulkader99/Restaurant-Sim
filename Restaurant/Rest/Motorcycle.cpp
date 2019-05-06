@@ -14,11 +14,13 @@ Motorcycle::Motorcycle(ORD_TYPE motoType, int s, REGION R)
 
 bool Motorcycle::checkIfArrived(int timeStep)
 { 
-	if (timeStep >= returnTime) {
-		status = IDLE;
-		returnTime = 0;
-		Ord = nullptr;
-		return true;
+	if (status == SERV) {
+		if (timeStep >= returnTime) {
+			status = IDLE;
+			returnTime = 0;
+			Ord = nullptr;
+			return true;
+		}
 	}
 	return false;
 }

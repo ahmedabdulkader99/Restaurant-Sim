@@ -7,7 +7,8 @@ Region::Region(int fc, int nc, int fzc, int ns, int fss, int fzs, REGION R, int 
 	VIPOrders(), NormalOrders(), FrozenOrders(),
 	region(R), autoPromotion(autoP),
 	nOrderCount(0), fOrderCount(0), vOrderCount(0),
-	inService(), inServiceCount(0), Finished(), finishedCount(0), waitingOrders(0)
+	inService(), inServiceCount(0), Finished(), finishedCount(0), waitingOrders(0),
+	aFstCount(fc), aNorCount(nc), aFrzCount(fzc)
 {
 	for (int i(1); i <= nc; i++)
 	{
@@ -35,6 +36,18 @@ bool Region::HasOrder(int id)
 	return false;
 }
 
+int Region::getActiveN() {
+	return nOrderCount;
+}
+
+int Region::getActiveF() {
+	return fOrderCount;
+}
+
+int Region::getActiveV() {
+	return vOrderCount;
+}
+
 int Region::GetWaitingOrders()
 {
 	return waitingOrders;
@@ -58,6 +71,18 @@ int Region::GetFMotoCount()
 int Region::GetVMotoCount()
 {
 	return fstCount;
+}
+
+int Region::GetAvNMotoCount() {
+	return aNorCount;
+}
+
+int Region::GetAvFMotoCount() {
+	return aFrzCount;
+}
+
+int Region::GetAvVMotoCount() {
+	return aFstCount;
 }
 
 void Region::AddOrder(Order * pOrd)
@@ -185,17 +210,23 @@ void Region::updateMotorcycles(int T)
 	for (int i(1); i < norCount; i++)
 	{
 		Motorcycle* M = normalMotos.getEntry(i);
-		M->checkIfArrived(T);
+		if (M->checkIfArrived(T)) {
+			aNorCount++;
+		}
 	}
 	for (int i(1); i < frzCount; i++)
 	{
 		Motorcycle* M = frozenMotos.getEntry(i);
-		M->checkIfArrived(T);
+		if (M->checkIfArrived(T)) {
+			aFrzCount++;
+		}
 	}
 	for (int i(1); i < fstCount; i++)
 	{
 		Motorcycle* M = fastMotos.getEntry(i);
-		M->checkIfArrived(T);
+		if (M->checkIfArrived(T)) {
+			aFstCount++;
+		}
 	}
 }
 
@@ -309,6 +340,7 @@ bool Region::getAvailableMotoN(Motorcycle* &pMoto)
 		if (M->isIdle())
 		{
 			pMoto = M;
+			aNorCount--;
 			return true;
 		}		
 	}
@@ -323,6 +355,7 @@ bool Region::getAvailableMotoF(Motorcycle*& pMoto)
 		if (M->isIdle())
 		{
 			pMoto = M;
+			aFrzCount--;
 			return true;
 		}
 	}
@@ -336,6 +369,7 @@ bool Region::getAvailableMotoV(Motorcycle*& pMoto)
 		Motorcycle* M = fastMotos.getEntry(i);
 		if (M->isIdle())
 		{
+			aFstCount--;
 			pMoto = M;
 			return true;
 		}
