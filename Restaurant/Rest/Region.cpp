@@ -110,14 +110,14 @@ void Region::AddOrder(Order * pOrd)
 	waitingOrders++;
 }
 
-bool Region::RemoveOrder(int id)
+bool Region::RemoveOrder(int id, Restaurant* pRest)
 {
 	for (int i = 0; i < totalOrders; i++) 
 	{
 		if (id == orderInRegion[i].ID) 
 		{
-			if (orderInRegion[i].TYPE == 'N') {
-			
+			if (orderInRegion[i].TYPE == 'N') 
+			{
 				Order* npOrd;
 				for (int i(1); i <= nOrderCount; i++)
 				{
@@ -125,10 +125,13 @@ bool Region::RemoveOrder(int id)
 					if (npOrd->GetID() == id) {
 						delete npOrd;
 						NormalOrders.remove(i);
+						pRest->DecrementCount();
+						pRest->unPrintOrder(id);
 						nOrderCount--;
 						waitingOrders--;
 						return true;
 					}
+					return false;
 				}
 			}
 		}

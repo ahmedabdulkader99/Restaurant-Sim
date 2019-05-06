@@ -38,6 +38,10 @@ private:
 	int VIPMotoCount;
 	int normalMotoCount;
 	int frozenMotoCount;
+	int vFinishedCount;
+	int nFinishedCount;
+	int fFinishedCount;
+
 
 
 public:

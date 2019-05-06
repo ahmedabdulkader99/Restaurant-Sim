@@ -12,7 +12,8 @@ using namespace std;
 #include "Region.h"
 
 Restaurant::Restaurant()
-	:activeCount(0), finishedOrderCount(0), inServiceOrderCount(0)
+	:activeCount(0), finishedOrderCount(0), inServiceOrderCount(0),
+	vFinishedCount(0), nFinishedCount(0), fFinishedCount(0)
 {
 	pGUI = NULL;
 
@@ -124,11 +125,9 @@ void Restaurant::AddOrder(Order* pOrd)
 
 void Restaurant::RemoveOrder(int id)
 {
-	activeCount--;
-	pGUI->RemoveOrderFromDrawing(id);
 	for (int i = 0; i < 4; i++) {
 		if (region[i]->HasOrder(id)) {
-			region[i]->RemoveOrder(id);
+			region[i]->RemoveOrder(id, this);
 			return;
 		}
 	}
@@ -144,6 +143,19 @@ void Restaurant::AddToFinished(Order* pOrd)
 	F->WT = F->FT - (F->ST + F->AT);
 
 	finishedOrderCount++;
+
+	switch (pOrd->GetType())
+	{
+	case (TYPE_NRM):
+		nFinishedCount++;
+		break;
+	case(TYPE_FROZ):
+		fFinishedCount++;
+		break;
+	case(TYPE_VIP):
+		vFinishedCount++;
+		break;
+	}
 
 	fOrderList.enqueue(F);
 }
@@ -225,7 +237,7 @@ void Restaurant::Interactive()
 				counts[i] = to_string(NumCounts[i]);
 			}
 			timestep = to_string(CurrentTimeStep);
-			active = to_string(TotalCount);
+			active = to_string(activeCount);
 			string time = "Time: " + timestep;
 			string ActiveCnt = " // Active Orders: " + active + " ==";
 			string Counts;
@@ -235,7 +247,11 @@ void Restaurant::Interactive()
 				string bf = " | ";
 				Counts += (bf + R + af + counts[i]);
 			}
-			
+
+			string finishedCnt = " // Finished Orders: ";
+			finishedCnt += ("N: " + to_string(nFinishedCount) + " | ");
+			finishedCnt += ("F: " + to_string(fFinishedCount) + " | ");
+			finishedCnt += ("V: " + to_string(vFinishedCount) + " |");
 
 			Queue<Motorcycle*> M;
 			string TOTALMOTO;
@@ -246,7 +262,8 @@ void Restaurant::Interactive()
 				string assignedMoto;
 				int oId, mId, Mcount(0);
 				char oType, mType;
-				while (!M.isEmpty()) {
+				while (!M.isEmpty()) 
+				{
 					Rcount++;
 					M.dequeue(pMoto);
 					oId = pMoto->getOrderInfo(oType);
@@ -265,7 +282,7 @@ void Restaurant::Interactive()
 			if (Rcount == 0) {
 				TOTALMOTO = "No Motorcycles Assigned at the last timestamp!";
 			}
-			msg = time + ActiveCnt + Counts + " | Assignment=> " + TOTALMOTO;
+			msg = time + ActiveCnt + Counts + finishedCnt + " // Assignment=> " + TOTALMOTO;
 			int nOrd[4];
 			int fOrd[4];
 			int vOrd[4];

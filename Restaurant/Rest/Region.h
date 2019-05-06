@@ -66,7 +66,7 @@ public:
 	int GetAvVMotoCount();
 
 	void AddOrder(Order* pOrd);
-	bool RemoveOrder(int id);
+	bool RemoveOrder(int id, Restaurant* pRest);
 	bool PromoteOrder(int id, int exm);
 
 	void updateRegion(Restaurant* pRest, int timeStep);
