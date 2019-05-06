@@ -197,8 +197,10 @@ void Restaurant::RunSimulation()
 		Interactive();
 		break;
 	case MODE_STEP:
+		StepByStep();
 		break;
 	case MODE_SLNT:
+		Silent();
 		break;
 	};
 
@@ -344,6 +346,238 @@ void Restaurant::Interactive()
 			RestTotalV += vip;
 			RestMotoN += nor; 
 			RestMotoF += frz; 
+			RestMotoV += fst;
+
+			/*Orders: 124 [Norm:100, Froz:15, VIP:9]
+			MotorC: 9 [Norm:5, Froz:3, VIP:1]
+			Avg Wait = 12.3, Avg Serv = 25.65*/
+			out << "\t" << "Orders:" << orders << "[Norm:" << Norm << ", Froz:" << froz << ", VIP: " << vip << "]" << endl;
+			out << "\t" << "MotorC:" << MotorC << "[Norm:" << nor << ", Froz:" << frz << ",VIP: " << fst << "]" << endl;
+			out << "\t" << "Avg Wait=" << setprecision(3) << avgwait << ", Avg Serv=" << avgserv << endl;
+		}
+
+		out << "Total for Restaurant:" << endl;
+		out << "\t" << "Orders:" << (RestTotalF + RestTotalN + RestTotalV) << "[Norm:" << RestTotalN << ", Froz:" << RestTotalF << ", VIP: " << RestTotalV << "]" << endl;
+		out << "\t" << "MotorC:" << (RestMotoN + RestMotoF + RestMotoV) << "[Norm:" << RestMotoN << ", Froz:" << RestMotoF << ",VIP: " << RestMotoV << "]" << endl;
+		out << "\t" << "Avg Wait=" << setprecision(3) << (RestTotalWait / RestCount) << ", Avg Serv=" << (RestTotalServ / RestCount) << endl;
+	}
+	pGUI->PrintMessage("Generated Output file! Click to exit...");
+	pGUI->waitForClick();
+}
+
+void Restaurant::StepByStep()
+{
+	int CurrentTimeStep = 0;
+	while (!EventsQueue.isEmpty() || activeCount > 0 || inServiceOrderCount > 0)
+	{
+
+		for (int i = 0; i < 4; i++) {
+			region[i]->updateRegion(this, CurrentTimeStep);
+		}
+
+		ExecuteEvents(CurrentTimeStep);
+
+		inServiceOrderCount = 0;
+		for (int i = 0; i < 4; i++) {
+			inServiceOrderCount += region[i]->GetInServiceOrders();
+		}
+
+		//print current timestep and extra details
+		{
+			string msg;
+			string timestep;
+			string active;
+			string counts[4];
+			int NumCounts[4];
+			int TotalCount = 0;
+			for (int i = 0; i < 4; i++) {
+				TotalCount += region[i]->GetWaitingOrders();
+				NumCounts[i] = region[i]->GetWaitingOrders();
+				counts[i] = to_string(NumCounts[i]);
+			}
+			timestep = to_string(CurrentTimeStep);
+			active = to_string(activeCount);
+			string time = "Time: " + timestep;
+			string ActiveCnt = " // Active Orders: " + active + " ==";
+			string Counts;
+			for (int i = 0; i < 4; i++) {
+				char R = 65 + i;
+				string af = ":";
+				string bf = " | ";
+				Counts += (bf + R + af + counts[i]);
+			}
+
+			string finishedCnt = " // Finished Orders: ";
+			finishedCnt += ("N: " + to_string(nFinishedCount) + " | ");
+			finishedCnt += ("F: " + to_string(fFinishedCount) + " | ");
+			finishedCnt += ("V: " + to_string(vFinishedCount) + " |");
+
+			Queue<Motorcycle*> M;
+			string TOTALMOTO;
+			int Rcount(0);
+			for (int i = 0; i < 4; i++) {
+				M = region[i]->getLastAssigned();
+				Motorcycle* pMoto;
+				string assignedMoto;
+				int oId, mId, Mcount(0);
+				char oType, mType;
+				while (!M.isEmpty())
+				{
+					Rcount++;
+					M.dequeue(pMoto);
+					oId = pMoto->getOrderInfo(oType);
+					mId = pMoto->getID();
+					mType = pMoto->getType();
+					Mcount++;
+					assignedMoto += (mType + to_string(mId) + "(" + oType + to_string(oId) + ") ");
+				}
+				if (Mcount > 0) {
+					char r = 65 + i;
+					string sep = ": ";
+					TOTALMOTO += (r + sep + assignedMoto);
+				}
+
+			}
+			if (Rcount == 0) {
+				TOTALMOTO = "No Motorcycles Assigned at the last timestamp!";
+			}
+			msg = time + ActiveCnt + Counts + finishedCnt + " // Assignment=> " + TOTALMOTO;
+			int nOrd[4];
+			int fOrd[4];
+			int vOrd[4];
+			int MnOrd[4];
+			int MfOrd[4];
+			int MvOrd[4];
+			for (int i = 0; i < 4; i++) {
+				nOrd[i] = region[i]->getActiveN();
+				fOrd[i] = region[i]->getActiveF();
+				vOrd[i] = region[i]->getActiveV();
+				MnOrd[i] = region[i]->GetAvNMotoCount();
+				MfOrd[i] = region[i]->GetAvFMotoCount();
+				MvOrd[i] = region[i]->GetAvVMotoCount();
+			}
+
+			pGUI->UpdateDrawnCounts(nOrd, fOrd, vOrd, MnOrd, MfOrd, MvOrd);
+
+			pGUI->PrintMessage(msg);
+		}
+		pGUI->UpdateInterface();
+		Sleep(1000);
+		CurrentTimeStep++;	//advance timestep
+	}
+	pGUI->PrintMessage("Generated and assigned all orders ! Click to Generate Output...");
+	pGUI->waitForClick();
+
+	//Output
+	ofstream out("outputfile.txt");
+	{
+		out << "FT" << "\t" << "ID" << "\t" << "AT" << "\t" << "WT" << "\t" << "ST" << endl;
+		for (int i = 0; i < finishedOrderCount; i++)
+		{
+			finishedOrderStr* F = fOrderList.peek();
+			fOrderList.dequeue();
+			out << F->FT << "\t" << F->ID << "\t" << F->AT << "\t" << F->WT << "\t" << F->ST << endl;
+		}
+		float RestTotalWait(0), RestTotalServ(0);
+		int	RestCount(0), RestTotalN(0), RestTotalF(0), RestTotalV(0);
+		int RestMotoN(0), RestMotoF(0), RestMotoV(0);
+		for (int i = 0; i < 4; i++) {
+			char reg = 65 + i;
+			out << "Region " << reg << ":" << endl;
+			float avgwait = float(region[i]->getTotalWait()) / float(region[i]->getCount());
+			float avgserv = float(region[i]->getTotalServ()) / float(region[i]->getCount());
+			int Norm = region[i]->getTotalNCount();
+			int froz = region[i]->getTotalFCount();
+			int vip = region[i]->getTotalVCount();
+			int orders = Norm + froz + vip;
+			int nor = region[i]->getNMotoCount();
+			int fst = region[i]->getVMotoCount();
+			int frz = region[i]->getFMotoCount();
+			int MotorC = nor + fst + frz;
+
+			RestTotalWait += region[i]->getTotalWait();
+			RestTotalServ += region[i]->getTotalServ();
+			RestCount += region[i]->getCount();
+			RestTotalN += Norm;
+			RestTotalF += froz;
+			RestTotalV += vip;
+			RestMotoN += nor;
+			RestMotoF += frz;
+			RestMotoV += fst;
+
+			/*Orders: 124 [Norm:100, Froz:15, VIP:9]
+			MotorC: 9 [Norm:5, Froz:3, VIP:1]
+			Avg Wait = 12.3, Avg Serv = 25.65*/
+			out << "\t" << "Orders:" << orders << "[Norm:" << Norm << ", Froz:" << froz << ", VIP: " << vip << "]" << endl;
+			out << "\t" << "MotorC:" << MotorC << "[Norm:" << nor << ", Froz:" << frz << ",VIP: " << fst << "]" << endl;
+			out << "\t" << "Avg Wait=" << setprecision(3) << avgwait << ", Avg Serv=" << avgserv << endl;
+		}
+
+		out << "Total for Restaurant:" << endl;
+		out << "\t" << "Orders:" << (RestTotalF + RestTotalN + RestTotalV) << "[Norm:" << RestTotalN << ", Froz:" << RestTotalF << ", VIP: " << RestTotalV << "]" << endl;
+		out << "\t" << "MotorC:" << (RestMotoN + RestMotoF + RestMotoV) << "[Norm:" << RestMotoN << ", Froz:" << RestMotoF << ",VIP: " << RestMotoV << "]" << endl;
+		out << "\t" << "Avg Wait=" << setprecision(3) << (RestTotalWait / RestCount) << ", Avg Serv=" << (RestTotalServ / RestCount) << endl;
+	}
+	pGUI->PrintMessage("Generated Output file! Click to exit...");
+	pGUI->waitForClick();
+}
+
+void Restaurant::Silent()
+{
+	int CurrentTimeStep = 0;
+	while (!EventsQueue.isEmpty() || activeCount > 0 || inServiceOrderCount > 0)
+	{
+
+		for (int i = 0; i < 4; i++) {
+			region[i]->updateRegion(this, CurrentTimeStep);
+		}
+
+		ExecuteEvents(CurrentTimeStep);
+
+		inServiceOrderCount = 0;
+		for (int i = 0; i < 4; i++) {
+			inServiceOrderCount += region[i]->GetInServiceOrders();
+		}		
+		CurrentTimeStep++;	//advance timestep
+	}
+	pGUI->PrintMessage("Finished Silent Simulation ! Click to Generate Output...");
+	pGUI->waitForClick();
+
+	//Output
+	ofstream out("outputfile.txt");
+	{
+		out << "FT" << "\t" << "ID" << "\t" << "AT" << "\t" << "WT" << "\t" << "ST" << endl;
+		for (int i = 0; i < finishedOrderCount; i++)
+		{
+			finishedOrderStr* F = fOrderList.peek();
+			fOrderList.dequeue();
+			out << F->FT << "\t" << F->ID << "\t" << F->AT << "\t" << F->WT << "\t" << F->ST << endl;
+		}
+		float RestTotalWait(0), RestTotalServ(0);
+		int	RestCount(0), RestTotalN(0), RestTotalF(0), RestTotalV(0);
+		int RestMotoN(0), RestMotoF(0), RestMotoV(0);
+		for (int i = 0; i < 4; i++) {
+			char reg = 65 + i;
+			out << "Region " << reg << ":" << endl;
+			float avgwait = float(region[i]->getTotalWait()) / float(region[i]->getCount());
+			float avgserv = float(region[i]->getTotalServ()) / float(region[i]->getCount());
+			int Norm = region[i]->getTotalNCount();
+			int froz = region[i]->getTotalFCount();
+			int vip = region[i]->getTotalVCount();
+			int orders = Norm + froz + vip;
+			int nor = region[i]->getNMotoCount();
+			int fst = region[i]->getVMotoCount();
+			int frz = region[i]->getFMotoCount();
+			int MotorC = nor + fst + frz;
+
+			RestTotalWait += region[i]->getTotalWait();
+			RestTotalServ += region[i]->getTotalServ();
+			RestCount += region[i]->getCount();
+			RestTotalN += Norm;
+			RestTotalF += froz;
+			RestTotalV += vip;
+			RestMotoN += nor;
+			RestMotoF += frz;
 			RestMotoV += fst;
 
 			/*Orders: 124 [Norm:100, Froz:15, VIP:9]

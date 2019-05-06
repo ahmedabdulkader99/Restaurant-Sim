@@ -52,6 +52,8 @@ public:
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
 	void Interactive();
+	void StepByStep();
+	void Silent();
 
 	//Implementation funcs
 	void AddOrder(Order* pOrd);
