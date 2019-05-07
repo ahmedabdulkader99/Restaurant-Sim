@@ -4,7 +4,7 @@
 GUI::GUI()
 {
 	pWind = new window(WindWidth+15,WindHeight,0,0); 
-	pWind->ChangeTitle("The Restautant");
+	pWind->ChangeTitle("The Restautant SIM");
 
 	OrderCount = 0;
 
@@ -14,7 +14,8 @@ GUI::GUI()
 	OrdersClrs[TYPE_VIP] = 	FLATRED;		//VIP-order color					
 
 	ClearStatusBar();
-	ClearDrawingArea(); 
+	ClearDrawingArea();
+	PrintState();
 	DrawRestArea();  
 	
 }
@@ -63,11 +64,34 @@ void GUI::PrintMessage(string msg1, string msg2) const	//Prints a message on sta
 	ClearStatusBar();	//First clear the status bar
 	
 	pWind->SetPen(WHITE);
-	pWind->SetFont(18, BOLD , BY_NAME, "Arial");   
+	pWind->SetFont(20, BOLD , BY_NAME, "Arial");   
 	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/2), msg2);
 	pWind->DrawString(10, WindHeight - (int)(StatusBarHeight / 1.5), msg1);// You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
+void GUI::PrintState()
+{
+	string state;
+	switch (P)	//Add a function for each mode in next phases
+	{
+	case MODE_INTR:
+		state = "INTERACTIVE MODE";
+		break;
+	case MODE_STEP:
+		state = "STEP BY STEP MODE";
+		break;
+	case MODE_SLNT:
+		state = "SILENT MODE";
+		break;
+	default:
+		state = "Restaurant Simulator";
+	};
+
+	pWind->SetPen(WHITE);
+	pWind->SetFont(30, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(10, 13, state);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawString(const int iX, const int iY, const string Text)
 {
@@ -117,15 +141,7 @@ void GUI::DrawRestArea() const
 	pWind->DrawLine(WindWidth/2, YHalfDrawingArea - RestWidth/2, WindWidth/2, YHalfDrawingArea + RestWidth/2);
 	pWind->DrawLine(WindWidth/2 - RestWidth/2, YHalfDrawingArea, WindWidth/2 + RestWidth/2, YHalfDrawingArea);
 
-	// 4- Drawing the 4 white squares inside the Rest (one for each tower)
-	/*pWind->SetPen(FLATLIGHTBLUE);
-	pWind->SetBrush(WHITE);
-	pWind->DrawRectangle(RestStartX + L/3, RestStartY + L/3, RestStartX + 2*L/3, RestStartY + 2*L/3);
-	pWind->DrawRectangle(RestStartX + L/3, RestEndY - L/3, RestStartX + 2*L/3, RestEndY - 2*L/3);
-	pWind->DrawRectangle(RestEndX - 2*L/3, RestStartY + L/3, RestEndX - L/3, RestStartY + 2*L/3);
-	pWind->DrawRectangle(RestEndX - 2*L/3, RestEndY - L/3, RestEndX - L/3, RestEndY - 2*L/3);*/
-
-	// 5- Writing the letter of each region (A, B, C, D)
+	// 4- Writing the letter of each region (A, B, C, D)
 	pWind->SetPen(FLATWHITE);
 	pWind->SetFont(60, BOLD , BY_NAME, "Arial");
 	pWind->DrawString(RestStartX + (int)(0.36*L), RestStartY + 3*L/12, "A");
@@ -254,6 +270,7 @@ void GUI::UpdateDrawnCounts(int* N, int* F, int* V, int* NM, int* FM, int* VM)
 void GUI::UpdateInterface()
 {
 	ClearDrawingArea();
+	PrintState();
 	DrawRestArea();
 	DrawCounts();
 	DrawOrders();
@@ -293,7 +310,7 @@ void GUI::ResetDrawingList()
 }
 
 
-PROG_MODE	GUI::getGUIMode() const
+PROG_MODE	GUI::getGUIMode()
 {
 	PROG_MODE Mode;
 	do
@@ -304,5 +321,6 @@ PROG_MODE	GUI::getGUIMode() const
 	}
 	while(Mode< 0 || Mode >= MODE_CNT);
 	
+	P = Mode;
 	return Mode;
 }

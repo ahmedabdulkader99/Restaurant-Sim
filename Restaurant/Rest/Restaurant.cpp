@@ -253,7 +253,7 @@ void Restaurant::Interactive()
 			string finishedCnt = " // Finished Orders: ";
 			finishedCnt += ("N: " + to_string(nFinishedCount) + " | ");
 			finishedCnt += ("F: " + to_string(fFinishedCount) + " | ");
-			finishedCnt += ("V: " + to_string(vFinishedCount) + " |");
+			finishedCnt += ("V: " + to_string(vFinishedCount));
 
 			Queue<Motorcycle*> M;
 			string TOTALMOTO;
@@ -542,6 +542,7 @@ void Restaurant::Silent()
 		}		
 		CurrentTimeStep++;	//advance timestep
 	}
+	pGUI->PrintState();
 	pGUI->PrintMessage("Finished Silent Simulation ! Click to Generate Output...");
 	pGUI->waitForClick();
 

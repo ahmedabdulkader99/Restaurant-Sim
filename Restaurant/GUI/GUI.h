@@ -15,7 +15,7 @@ class GUI
 private:
 	window *pWind;
 	color OrdersClrs[TYPE_CNT];
-
+	PROG_MODE P;
 
 	// Some Static Constant Data Members: ---------------------
 
@@ -95,6 +95,7 @@ public:
 
 	// Output Functions  ---------------------------
 	void PrintMessage(string msg1, string msg2 = " ") const; // prints a message in the status bar
+	void PrintState();
 
 	void UpdateDrawnCounts(int* N, int* F, int* V, int* NM, int* FM, int* VM);
 	void UpdateInterface();
@@ -102,7 +103,7 @@ public:
 	void RemoveOrderFromDrawing(int id); //Removes Order from drawing list
 	void ResetDrawingList();		//resets drawing list (should be called every timestep after drawing)
 
-	PROG_MODE getGUIMode() const;			//returns the mode of the program
+	PROG_MODE getGUIMode();			//returns the mode of the program
 
 };
 
