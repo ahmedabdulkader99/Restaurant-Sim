@@ -9,9 +9,9 @@ GUI::GUI()
 	OrderCount = 0;
 
 	//Set color for each order type
-	OrdersClrs[TYPE_NRM] = 	DARKBLUE;	//normal-order color
-	OrdersClrs[TYPE_FROZ] = VIOLET;		//Frozen-order color
-	OrdersClrs[TYPE_VIP] = 	RED;		//VIP-order color					
+	OrdersClrs[TYPE_NRM] =  FLATDARKBLUE;	//normal-order color
+	OrdersClrs[TYPE_FROZ] = FLATLIGHTBLUE;		//Frozen-order color
+	OrdersClrs[TYPE_VIP] = 	FLATRED;		//VIP-order color					
 
 	ClearStatusBar();
 	ClearDrawingArea(); 
@@ -58,19 +58,20 @@ string GUI::GetString() const
 // ================================== OUTPUT FUNCTIONS ===================================
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void GUI::PrintMessage(string msg) const	//Prints a message on status bar
+void GUI::PrintMessage(string msg1, string msg2) const	//Prints a message on status bar
 {
 	ClearStatusBar();	//First clear the status bar
 	
-	pWind->SetPen(DARKRED);
+	pWind->SetPen(WHITE);
 	pWind->SetFont(18, BOLD , BY_NAME, "Arial");   
-	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/1.5), msg); // You may need to change these coordinates later 
+	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/2), msg2);
+	pWind->DrawString(10, WindHeight - (int)(StatusBarHeight / 1.5), msg1);// You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawString(const int iX, const int iY, const string Text)
 {
-	pWind->SetPen(DARKRED);
+	pWind->SetPen(WHITE);
 	pWind->SetFont(18, BOLD , BY_NAME, "Arial");   
 	pWind->DrawString(iX, iY, Text);
 }
@@ -78,19 +79,22 @@ void GUI::DrawString(const int iX, const int iY, const string Text)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::ClearStatusBar() const
 {
-	pWind->SetPen(WHITE, 3);
-	pWind->SetBrush(WHITE);
+	pWind->SetPen(FLATDARKBLUE, 3);
+	pWind->SetBrush(FLATDARKBLUE);
 	pWind->DrawRectangle(0, WindHeight - StatusBarHeight , WindWidth, WindHeight);	
 
-	pWind->SetPen(BROWN, 3);
+	pWind->SetPen(FLATDARKBLUE, 3);
 	pWind->DrawLine(0, WindHeight - StatusBarHeight , WindWidth, WindHeight - StatusBarHeight);	
 }
 ///////////////////////////////////////////////////////////////////////////////////
 void GUI::ClearDrawingArea() const
 {
 	// Clearing the Drawing area
-	pWind->SetPen(KHAKI, 3);
-	pWind->SetBrush(KHAKI);
+	pWind->SetPen(FLATDARKBLUE, 3);
+	pWind->SetBrush(FLATDARKBLUE);
+	pWind->DrawRectangle(0, 0, WindWidth, WindHeight - StatusBarHeight);
+	pWind->SetPen(FLATWHITE, 3);
+	pWind->SetBrush(FLATWHITE);
 	pWind->DrawRectangle(0, MenuBarHeight, WindWidth, WindHeight - StatusBarHeight);
 }
 ///////////////////////////////////////////////////////////////////////////////////
@@ -98,36 +102,36 @@ void GUI::DrawRestArea() const
 {
 	int L = RestWidth / 2;
 
-	// 1- Drawing the brown square of the Rest
-	pWind->SetPen(BROWN);
-	pWind->SetBrush(BROWN);
-	pWind->DrawRectangle(RestStartX, RestStartY, RestEndX, RestEndY);
-
-	// 2- Drawing the 2 brown crossed lines (for making 4 regions)
-	pWind->SetPen(BROWN, 3);
+	// 1- Drawing the 2 brown crossed lines (for making 4 regions)
+	pWind->SetPen(FLATDARKBLUE, 3);
 	pWind->DrawLine(0, YHalfDrawingArea, WindWidth, YHalfDrawingArea);
 	pWind->DrawLine(WindWidth/2, MenuBarHeight, WindWidth/2, WindHeight-StatusBarHeight);
 
+	// 2- Drawing the brown square of the Rest
+	pWind->SetPen(FLATRED);
+	pWind->SetBrush(FLATRED);
+	pWind->DrawRectangle(RestStartX, RestStartY, RestEndX, RestEndY);
+
 	// 3- Drawing the 2 white crossed lines (inside the Rest)
-	pWind->SetPen(WHITE);
+	pWind->SetPen(DARKRED, 2);
 	pWind->DrawLine(WindWidth/2, YHalfDrawingArea - RestWidth/2, WindWidth/2, YHalfDrawingArea + RestWidth/2);
 	pWind->DrawLine(WindWidth/2 - RestWidth/2, YHalfDrawingArea, WindWidth/2 + RestWidth/2, YHalfDrawingArea);
 
 	// 4- Drawing the 4 white squares inside the Rest (one for each tower)
-	pWind->SetPen(WHITE);
+	/*pWind->SetPen(FLATLIGHTBLUE);
 	pWind->SetBrush(WHITE);
 	pWind->DrawRectangle(RestStartX + L/3, RestStartY + L/3, RestStartX + 2*L/3, RestStartY + 2*L/3);
 	pWind->DrawRectangle(RestStartX + L/3, RestEndY - L/3, RestStartX + 2*L/3, RestEndY - 2*L/3);
 	pWind->DrawRectangle(RestEndX - 2*L/3, RestStartY + L/3, RestEndX - L/3, RestStartY + 2*L/3);
-	pWind->DrawRectangle(RestEndX - 2*L/3, RestEndY - L/3, RestEndX - L/3, RestEndY - 2*L/3);
+	pWind->DrawRectangle(RestEndX - 2*L/3, RestEndY - L/3, RestEndX - L/3, RestEndY - 2*L/3);*/
 
 	// 5- Writing the letter of each region (A, B, C, D)
-	pWind->SetPen(BROWN);
-	pWind->SetFont(25, BOLD , BY_NAME, "Arial");
-	pWind->DrawString(RestStartX + (int)(0.44*L), RestStartY + 5*L/12, "A");
-	pWind->DrawString(RestStartX + (int)(0.44*L), YHalfDrawingArea + 5*L/12, "D");
-	pWind->DrawString(WindWidth/2 + (int)(0.44*L), RestStartY + 5*L/12, "B");
-	pWind->DrawString(WindWidth/2 + (int)(0.44*L), YHalfDrawingArea + 5*L/12, "C"); 
+	pWind->SetPen(FLATWHITE);
+	pWind->SetFont(60, BOLD , BY_NAME, "Arial");
+	pWind->DrawString(RestStartX + (int)(0.36*L), RestStartY + 3*L/12, "A");
+	pWind->DrawString(RestStartX + (int)(0.36*L), YHalfDrawingArea + 3*L/12, "D");
+	pWind->DrawString(WindWidth/2 + (int)(0.34*L), RestStartY + 3*L/12, "B");
+	pWind->DrawString(WindWidth/2 + (int)(0.34*L), YHalfDrawingArea + 3*L/12, "C"); 
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////

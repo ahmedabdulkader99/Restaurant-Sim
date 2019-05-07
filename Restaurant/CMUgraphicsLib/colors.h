@@ -37,6 +37,11 @@ bool operator!=(color a, color b);
 
 */
 
+const color FLATDARKBLUE = color(44, 62, 79);
+const color FLATLIGHTBLUE = color(58, 153, 217);
+const color FLATRED = color(229, 77, 66);
+const color FLATBLUE = color(46, 129, 183);
+const color FLATWHITE = color(236, 240, 241);
 const color SNOW = color(255, 250, 250);
 const color GHOSTWHITE = color(248, 248, 255);
 const color WHITESMOKE = color(245, 245, 245);

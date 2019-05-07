@@ -284,7 +284,8 @@ void Restaurant::Interactive()
 			if (Rcount == 0) {
 				TOTALMOTO = "No Motorcycles Assigned at the last timestamp!";
 			}
-			msg = time + ActiveCnt + Counts + finishedCnt + " // Assignment=> " + TOTALMOTO;
+			msg = time + ActiveCnt + Counts + finishedCnt;
+			string msg2 = " // Assignment=> " + TOTALMOTO;
 			int nOrd[4];
 			int fOrd[4];
 			int vOrd[4];
@@ -302,7 +303,7 @@ void Restaurant::Interactive()
 
 			pGUI->UpdateDrawnCounts(nOrd, fOrd, vOrd, MnOrd, MfOrd, MvOrd);
 
-			pGUI->PrintMessage(msg);
+			pGUI->PrintMessage(msg, msg2);
 		}
 		pGUI->UpdateInterface();
 		pGUI->waitForClick();
@@ -441,7 +442,8 @@ void Restaurant::StepByStep()
 			if (Rcount == 0) {
 				TOTALMOTO = "No Motorcycles Assigned at the last timestamp!";
 			}
-			msg = time + ActiveCnt + Counts + finishedCnt + " // Assignment=> " + TOTALMOTO;
+			msg = time + ActiveCnt + Counts + finishedCnt;
+			string msg2 = " // Assignment=> " + TOTALMOTO;
 			int nOrd[4];
 			int fOrd[4];
 			int vOrd[4];
@@ -459,7 +461,7 @@ void Restaurant::StepByStep()
 
 			pGUI->UpdateDrawnCounts(nOrd, fOrd, vOrd, MnOrd, MfOrd, MvOrd);
 
-			pGUI->PrintMessage(msg);
+			pGUI->PrintMessage(msg,msg2);
 		}
 		pGUI->UpdateInterface();
 		Sleep(1000);
