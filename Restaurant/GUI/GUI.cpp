@@ -81,6 +81,7 @@ void GUI::PrintState()
 		state = "STEP BY STEP MODE";
 		break;
 	case MODE_SLNT:
+		ClearDrawingArea();
 		state = "SILENT MODE";
 		break;
 	default:
