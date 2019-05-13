@@ -7,6 +7,7 @@ GUI::GUI()
 	pWind->ChangeTitle("The Restautant SIM");
 
 	OrderCount = 0;
+	activeMCount = 0;
 
 	//Set color for each order type
 	OrdersClrs[TYPE_NRM] =  FLATDARKBLUE;	//normal-order color
@@ -65,8 +66,8 @@ void GUI::PrintMessage(string msg1, string msg2) const	//Prints a message on sta
 	
 	pWind->SetPen(WHITE);
 	pWind->SetFont(20, BOLD , BY_NAME, "Arial");   
-	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/2), msg2);
-	pWind->DrawString(10, WindHeight - (int)(StatusBarHeight / 1.5), msg1);// You may need to change these coordinates later 
+	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/3), msg2);
+	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight / 2), msg1);// You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
 void GUI::PrintState()
@@ -151,6 +152,23 @@ void GUI::DrawRestArea() const
 	pWind->DrawString(WindWidth/2 + (int)(0.34*L), YHalfDrawingArea + 3*L/12, "C"); 
 
 }
+
+void GUI::DrawMotoRoad()
+{
+	pWind->SetPen(FLATDARKBLUE, 10);
+	pWind->DrawLine(0, WindHeight - StatusBarHeight, WindWidth, WindHeight - StatusBarHeight);
+
+	pWind->SetPen(FLATDARKBLUE, 5);
+	pWind->DrawLine(0, WindHeight - 90, WindWidth, WindHeight - 90);
+
+	pWind->SetPen(FLATWHITE);
+	pWind->SetBrush(FLATWHITE);
+	pWind->DrawRectangle(0, WindHeight - StatusBarHeight, WindWidth, WindHeight - 90);
+
+	pWind->SetPen(FLATDARKBLUE, 3);
+	pWind->DrawLine(0, WindHeight - 115, WindWidth, WindHeight - 115);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawSingleOrder(Order* pO, int RegionCount) const       // It is a private function
 {
@@ -232,6 +250,48 @@ void GUI::DrawOrders() const
 
 }
 
+void GUI::DrawMotoOnRoad(servMoto* M)
+{
+	color clr = OrdersClrs[M->type];
+	// Drawing the MOTO
+	pWind->SetPen(clr);
+	pWind->SetBrush(clr);
+
+	pWind->SetFont(20, BOLD, MODERN);
+	pWind->DrawInteger(M->xPos, M->yPos, M->ID);
+
+	if (M->xPos >= WindWidth-10 && !M->serviced) {
+		M->serviced = true;
+		M->yPos = 540;
+	}
+	if (M->xPos <= 0 && M->serviced) {
+		M->finished = true;
+	}
+	if (M->serviced)
+		M->xPos -= M->increment;
+	else
+		M->xPos += M->increment;
+}
+
+void GUI::DrawAllMotos()
+{
+	for (int i = 0; i < activeMCount; i++) {
+		servMoto* M = motoOnRoad[i];
+		DrawMotoOnRoad(M);
+	}
+	for (int i = 0; i < activeMCount; i++) {
+		servMoto* M = motoOnRoad[i];
+		if (M->finished) {
+			activeMCount--;
+			for (int j = i; j < activeMCount +1; j++) {
+				motoOnRoad[j] = motoOnRoad[j + 1];
+			}
+		}
+	}
+}
+
+
+
 void GUI::DrawCounts() const
 {
 	int L = RestWidth / 2;
@@ -273,6 +333,8 @@ void GUI::UpdateInterface()
 	ClearDrawingArea();
 	PrintState();
 	DrawRestArea();
+	DrawMotoRoad();
+	DrawAllMotos();
 	DrawCounts();
 	DrawOrders();
 }
@@ -308,6 +370,34 @@ void GUI::RemoveOrderFromDrawing(int id)
 void GUI::ResetDrawingList()
 {
 	OrderCount = 0;		//resets the orders count to be ready for next timestep updates
+}
+
+void GUI::AddMotoToRoad(Motorcycle* pMoto)
+{
+	servMoto* M = new servMoto;
+	M->ID = pMoto->getID();
+	M->distance = pMoto->getDistance();
+	M->speed = pMoto->getSpeed();
+	char t = pMoto->getType();
+	switch (t) {
+	case('N'):
+		M->type = TYPE_NRM;
+		break;
+	case('F'):
+		M->type = TYPE_FROZ;
+		break;
+	case('V'):
+		M->type = TYPE_VIP;
+		break;
+	}
+	M->xPos = 0;
+	M->yPos = rand() % 15 + 500;
+	if ((M->distance / M->speed)==0)
+		M->increment = WindWidth;
+	else
+		M->increment = WindWidth / (M->distance / M->speed);
+	motoOnRoad[activeMCount] = M;
+	activeMCount++;
 }
 
 

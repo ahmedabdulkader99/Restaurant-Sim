@@ -1,53 +1,53 @@
 FT	ID	AT	WT	ST
-8	6	5	1	2
-12	7	6	1	5
-13	11	9	1	3
-13	12	9	1	3
-13	10	9	1	3
+13	6	10	1	2
 13	1	5	1	7
-13	2	5	1	7
-13	3	5	1	7
-13	4	5	1	7
-13	5	5	1	7
-14	9	8	1	5
-20	13	9	1	10
-24	8	7	12	5
-25	14	17	1	7
-25	15	17	1	7
-25	16	17	1	7
-25	17	17	1	7
-28	18	19	1	8
-28	20	19	1	8
-28	21	19	1	8
-31	19	19	1	11
-36	23	27	1	8
-37	22	25	1	11
-38	24	35	1	2
-44	25	35	1	8
-44	26	35	1	8
-46	27	37	1	8
-52	29	37	12	3
-54	32	37	12	5
-56	31	37	17	2
-60	28	37	15	8
-60	30	37	15	8
+14	2	6	1	7
+15	3	7	1	7
+16	4	8	1	7
+17	9	14	1	2
+17	5	9	1	7
+18	7	11	2	5
+19	10	15	1	3
+20	11	16	1	3
+21	8	13	6	2
+21	12	17	1	3
+27	14	19	1	7
+28	15	20	1	7
+29	16	21	1	7
+29	13	18	1	10
+30	23	27	1	2
+30	17	22	1	7
+31	24	28	1	2
+32	18	23	1	8
+34	20	25	1	8
+35	27	31	2	2
+35	25	29	1	5
+35	21	26	1	8
+36	26	30	1	5
+36	19	24	1	11
+39	31	35	2	2
+39	32	36	1	2
+39	22	27	1	11
+40	29	33	2	5
+42	28	32	2	8
+44	30	34	2	8
 Region A:
-	Orders:10[Norm:6, Froz:0, VIP: 4]
+	Orders:10[Norm:7, Froz:0, VIP: 3]
 	MotorC:9[Norm:5, Froz:3,VIP: 1]
-	Avg Wait=2.1, Avg Serv=6
+	Avg Wait=1.6, Avg Serv=4.8
 Region B:
 	Orders:4[Norm:1, Froz:0, VIP: 3]
 	MotorC:11[Norm:6, Froz:3,VIP: 2]
 	Avg Wait=1, Avg Serv=4.75
 Region C:
-	Orders:13[Norm:5, Froz:0, VIP: 8]
+	Orders:13[Norm:10, Froz:0, VIP: 3]
 	MotorC:7[Norm:4, Froz:2,VIP: 1]
-	Avg Wait=6.08, Avg Serv=6.15
+	Avg Wait=1.38, Avg Serv=5.15
 Region D:
 	Orders:5[Norm:3, Froz:2, VIP: 0]
 	MotorC:15[Norm:9, Froz:4,VIP: 2]
 	Avg Wait=1, Avg Serv=9.2
 Total for Restaurant:
-	Orders:32[Norm:15, Froz:2, VIP: 15]
+	Orders:32[Norm:21, Froz:2, VIP: 9]
 	MotorC:42[Norm:24, Froz:12,VIP: 6]
-	Avg Wait=3.41, Avg Serv=6.41
+	Avg Wait=1.34, Avg Serv=5.63

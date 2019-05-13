@@ -24,7 +24,9 @@ public:
 	void assign(Order* pOrd);
 	bool isIdle() const;
 	int getOrderInfo(char &T);
+	int getDistance();
 	int getID();
+	int getSpeed();
 	char getType();
 };
 

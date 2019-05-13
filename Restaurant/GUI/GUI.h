@@ -7,6 +7,7 @@
 #include "..\Rest\Order.h"
 
 #include <string>
+#include "../Rest/Motorcycle.h"
 using namespace std;
 
 class GUI
@@ -16,6 +17,22 @@ private:
 	window *pWind;
 	color OrdersClrs[TYPE_CNT];
 	PROG_MODE P;
+
+	struct servMoto {
+		int ID;
+		int speed;
+		int distance;
+		int xPos;
+		int yPos;
+		ORD_TYPE type;
+		int increment;
+		bool serviced = 0;
+		bool finished = 0;
+	};
+
+	int activeMCount;
+
+	servMoto* motoOnRoad[100];
 
 	// Some Static Constant Data Members: ---------------------
 
@@ -77,10 +94,14 @@ private:
 	void DrawSingleOrder(Order* pO, int RegionCount) const;		//draws ONE order 
 	void DrawOrders() const;		//drwas ALL orders in OrdListForDrawing
 
+	void DrawMotoOnRoad(servMoto* M);
+	void DrawAllMotos();
+
 	void DrawCounts() const;
 
 	void DrawString(const int iX, const int iY, const string Text); // prints a message in the passed coordinates
 	void DrawRestArea() const;	    // draws the restaurant area
+	void DrawMotoRoad();
 
 	void ClearStatusBar() const;    // clears the status bar
 	void ClearDrawingArea() const;	// clears the Drawing area from all drawings
@@ -102,6 +123,8 @@ public:
 	void AddOrderForDrawing(Order* pOrd);	//Adds a new order to the drawing list
 	void RemoveOrderFromDrawing(int id); //Removes Order from drawing list
 	void ResetDrawingList();		//resets drawing list (should be called every timestep after drawing)
+
+	void AddMotoToRoad(Motorcycle* pMoto);
 
 	PROG_MODE getGUIMode();			//returns the mode of the program
 

@@ -268,6 +268,7 @@ void Restaurant::Interactive()
 				{
 					Rcount++;
 					M.dequeue(pMoto);
+					pGUI->AddMotoToRoad(pMoto);
 					oId = pMoto->getOrderInfo(oType);
 					mId = pMoto->getID();
 					mType = pMoto->getType();
@@ -426,6 +427,7 @@ void Restaurant::StepByStep()
 				{
 					Rcount++;
 					M.dequeue(pMoto);
+					pGUI->AddMotoToRoad(pMoto);
 					oId = pMoto->getOrderInfo(oType);
 					mId = pMoto->getID();
 					mType = pMoto->getType();
@@ -464,7 +466,7 @@ void Restaurant::StepByStep()
 			pGUI->PrintMessage(msg,msg2);
 		}
 		pGUI->UpdateInterface();
-		Sleep(1000);
+		Sleep(100);
 		CurrentTimeStep++;	//advance timestep
 	}
 	pGUI->PrintMessage("Generated and assigned all orders ! Click to Generate Output...");
@@ -646,8 +648,3 @@ Restaurant::~Restaurant()
 {
 	delete pGUI;
 }
-
-
-
-
-	 

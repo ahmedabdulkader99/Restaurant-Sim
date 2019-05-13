@@ -60,9 +60,21 @@ int Motorcycle::getOrderInfo(char &Type)
 	}
 }
 
+int Motorcycle::getDistance()
+{
+	if (status == SERV) {
+		return Ord->GetDistance();
+	}
+}
+
 int Motorcycle::getID()
 {
 	return ID;
+}
+
+int Motorcycle::getSpeed()
+{
+	return speed;
 }
 
 char Motorcycle::getType()

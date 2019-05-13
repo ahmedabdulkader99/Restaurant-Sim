@@ -210,21 +210,21 @@ void Region::updateRegion(Restaurant* pRest, int timeStep) //HERE
 
 void Region::updateMotorcycles(int T)
 {
-	for (int i(1); i < norCount; i++)
+	for (int i(1); i <= norCount; i++)
 	{
 		Motorcycle* M = normalMotos.getEntry(i);
 		if (M->checkIfArrived(T)) {
 			aNorCount++;
 		}
 	}
-	for (int i(1); i < frzCount; i++)
+	for (int i(1); i <= frzCount; i++)
 	{
 		Motorcycle* M = frozenMotos.getEntry(i);
 		if (M->checkIfArrived(T)) {
 			aFrzCount++;
 		}
 	}
-	for (int i(1); i < fstCount; i++)
+	for (int i(1); i <= fstCount; i++)
 	{
 		Motorcycle* M = fastMotos.getEntry(i);
 		if (M->checkIfArrived(T)) {
